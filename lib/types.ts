@@ -68,6 +68,8 @@ export interface Claim {
   userId: string;
   lostReportId?: string;
   proofOfOwnership: string;
+  lostOn?: string; // ISO, when the claimant says it was lost
+  lostAt?: string; // where the claimant says it was lost
   status: ClaimStatus;
   submittedOn: string; // ISO
   rejectionReason?: string;

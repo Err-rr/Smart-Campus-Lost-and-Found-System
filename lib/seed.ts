@@ -9,6 +9,7 @@ import type {
   Notification,
   User,
 } from './types';
+import { scorePair } from './matching';
 
 export const CAMPUS_LOCATIONS = [
   'Central Library',
@@ -107,7 +108,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
         'Blue iPhone 13 in a clear case with a sticker on the back. Lock screen shows a photo of a beach.',
       locationLost: 'Academic Block',
       dateLost: at(1, 6),
-      status: 'open',
+      status: 'matched',
     },
     {
       id: 'LR-0002',
@@ -115,7 +116,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
       categoryId: 'cat-electronics',
       title: 'Scientific calculator',
       description: 'Casio fx-991ES Plus. My name is written on the back cover in marker.',
-      locationLost: 'Academic Block',
+      locationLost: 'Mechanical Workshop',
       dateLost: at(5),
       status: 'matched',
     },
@@ -135,7 +136,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
       categoryId: 'cat-clothing',
       title: 'Grey hoodie',
       description: 'Plain grey zip hoodie, size M. Left pocket is torn.',
-      locationLost: 'Canteen',
+      locationLost: 'Girls Hostel',
       dateLost: at(10),
       status: 'open',
     },
@@ -157,7 +158,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
       description: 'Black Wildcraft backpack with a laptop sleeve and a steel bottle in the side pocket.',
       locationLost: 'OAT',
       dateLost: at(2, 3),
-      status: 'open',
+      status: 'matched',
     },
     {
       id: 'LR-0007',
@@ -167,7 +168,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
       description: 'Two keys on a red keyring with a paper tag for room 214.',
       locationLost: 'Boys Hostel',
       dateLost: at(0, 9),
-      status: 'open',
+      status: 'matched',
     },
     {
       id: 'LR-0008',
@@ -177,7 +178,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
       description: 'Brown leather wallet with a metro card and some cash.',
       locationLost: 'Canteen',
       dateLost: at(4),
-      status: 'open',
+      status: 'matched',
     },
     {
       id: 'LR-0009',
@@ -197,7 +198,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
       description: 'Black lanyard with a staff ID card holder. Library card kept behind the ID.',
       locationLost: 'Admin Block',
       dateLost: at(6, 2),
-      status: 'open',
+      status: 'matched',
     },
   ];
 
@@ -257,12 +258,12 @@ export function createSeedData(now: Date = new Date()): DemoData {
     {
       id: 'FI-0005',
       reportedBy: 'u-sunil',
-      handedInBy: 'Lab assistant, room 112',
+      handedInBy: 'Workshop instructor',
       categoryId: 'cat-electronics',
       title: 'Scientific calculator',
-      publicDescription: 'Casio scientific calculator, found in room 112.',
+      publicDescription: 'Casio scientific calculator, found on a workbench in the drawing hall.',
       hiddenDetails: "Name 'Aarav S.' written on the back cover in black marker.",
-      locationFound: 'Academic Block',
+      locationFound: 'Mechanical Workshop',
       dateFound: at(4, 4),
       heldAt: 'Admin Block Help Desk',
       status: 'claim_pending',
@@ -301,7 +302,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
       publicDescription: 'Grey zip hoodie, size M, left on a chair in the canteen.',
       hiddenDetails: 'Left pocket torn. Blue pen in the right pocket.',
       locationFound: 'Canteen',
-      dateFound: at(9),
+      dateFound: at(2),
       heldAt: 'Admin Block Help Desk',
       status: 'in_custody',
     },
@@ -313,7 +314,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
       publicDescription: 'Engineering Drawing textbook found on a reading table, second floor.',
       hiddenDetails: 'Name written on the first page. Pencil notes in chapter 4.',
       locationFound: 'Central Library',
-      dateFound: at(12),
+      dateFound: at(5),
       heldAt: 'Central Library Desk',
       status: 'in_custody',
     },
@@ -358,89 +359,33 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
   ];
 
-  const matches: Match[] = [
-    {
-      id: 'M-0001',
-      lostReportId: 'LR-0001',
-      foundItemId: 'FI-0003',
-      matchScore: 86,
-      breakdown: { category: 30, keywords: 26, location: 20, date: 10 },
-      status: 'suggested',
-      matchedOn: at(0, 18),
-    },
-    {
-      id: 'M-0002',
-      lostReportId: 'LR-0002',
-      foundItemId: 'FI-0005',
-      matchScore: 82,
-      breakdown: { category: 30, keywords: 22, location: 20, date: 10 },
-      status: 'confirmed',
-      matchedOn: at(4),
-    },
-    {
-      id: 'M-0003',
-      lostReportId: 'LR-0003',
-      foundItemId: 'FI-0001',
-      matchScore: 91,
-      breakdown: { category: 30, keywords: 25, location: 20, date: 16 },
-      status: 'confirmed',
-      matchedOn: at(18),
-    },
-    {
-      id: 'M-0004',
-      lostReportId: 'LR-0006',
-      foundItemId: 'FI-0004',
-      matchScore: 78,
-      breakdown: { category: 30, keywords: 18, location: 20, date: 10 },
-      status: 'suggested',
-      matchedOn: at(1, 20),
-    },
-    {
-      id: 'M-0005',
-      lostReportId: 'LR-0007',
-      foundItemId: 'FI-0006',
-      matchScore: 81,
-      breakdown: { category: 30, keywords: 21, location: 20, date: 10 },
-      status: 'suggested',
-      matchedOn: at(0, 4),
-    },
-    {
-      id: 'M-0006',
-      lostReportId: 'LR-0008',
-      foundItemId: 'FI-0010',
-      matchScore: 74,
-      breakdown: { category: 30, keywords: 14, location: 20, date: 10 },
-      status: 'suggested',
-      matchedOn: at(3),
-    },
-    {
-      id: 'M-0007',
-      lostReportId: 'LR-0010',
-      foundItemId: 'FI-0007',
-      matchScore: 88,
-      breakdown: { category: 30, keywords: 24, location: 20, date: 14 },
-      status: 'suggested',
-      matchedOn: at(5, 20),
-    },
-    {
-      id: 'M-0008',
-      lostReportId: 'LR-0004',
-      foundItemId: 'FI-0008',
-      matchScore: 69,
-      breakdown: { category: 30, keywords: 15, location: 20, date: 4 },
-      status: 'suggested',
-      matchedOn: at(8),
-    },
-    {
-      id: 'M-0009',
-      lostReportId: 'LR-0005',
-      foundItemId: 'FI-0009',
-      matchScore: 54,
-      breakdown: { category: 30, keywords: 12, location: 0, date: 12 },
-      status: 'suggested',
-      matchedOn: at(11),
-    },
+  // Seeded matches are scored by the real engine so the numbers are consistent.
+  const seedPairs: [string, string, Match['status'], string][] = [
+    ['LR-0001', 'FI-0003', 'suggested', at(0, 18)],
+    ['LR-0002', 'FI-0005', 'confirmed', at(4)],
+    ['LR-0003', 'FI-0001', 'confirmed', at(18)],
+    ['LR-0006', 'FI-0004', 'suggested', at(1, 20)],
+    ['LR-0007', 'FI-0006', 'suggested', at(0, 4)],
+    ['LR-0008', 'FI-0010', 'suggested', at(3)],
+    ['LR-0010', 'FI-0007', 'suggested', at(5, 20)],
   ];
+
+  const matches: Match[] = seedPairs.map(([lostId, foundId, status, matchedOn], i) => {
+    const lost = lostReports.find((r) => r.id === lostId)!;
+    const found = foundItems.find((f) => f.id === foundId)!;
+    const result = scorePair(lost, found) ?? {
+      matchScore: 0,
+      breakdown: { category: 0, location: 0, date: 0, keywords: 0 },
+    };
+    return {
+      id: `M-${String(i + 1).padStart(4, '0')}`,
+      lostReportId: lostId,
+      foundItemId: foundId,
+      ...result,
+      status,
+      matchedOn,
+    };
+  });
 
   const claims: Claim[] = [
     {
@@ -450,6 +395,8 @@ export function createSeedData(now: Date = new Date()): DemoData {
       lostReportId: 'LR-0003',
       proofOfOwnership:
         'White earphones in a black pouch. The pouch zip has a small tear. Bought in August from the campus store.',
+      lostOn: at(19),
+      lostAt: 'Central Library',
       status: 'handed_over',
       submittedOn: at(17, 6),
       handoverDate: at(16),
@@ -462,6 +409,8 @@ export function createSeedData(now: Date = new Date()): DemoData {
       lostReportId: 'LR-0002',
       proofOfOwnership:
         "My name 'Aarav S.' is written on the back cover in black marker. I can show the purchase bill.",
+      lostOn: at(5),
+      lostAt: 'Mechanical Workshop',
       status: 'submitted',
       submittedOn: at(3, 5),
     },
@@ -476,15 +425,15 @@ export function createSeedData(now: Date = new Date()): DemoData {
   ): Notification => ({ id, userId, text, createdAt, read, channel: 'email and SMS, simulated' });
 
   const notifications: Notification[] = [
-    note('N-0001', 'u-aarav', 'Possible match for LR-0001 (iPhone 13). Match score 86. Review it under My Reports.', at(0, 18)),
-    note('N-0002', 'u-aarav', 'Claim CL-0002 for FI-0005 received. The desk will verify it within 2 working days.', at(3, 5)),
+    note('N-0001', 'u-aarav', 'Possible match for your report LR-0001: iPhone 13 found at Academic Block.', at(0, 18)),
+    note('N-0002', 'u-aarav', 'Claim CL-0002 submitted. The desk will review it.', at(3, 5)),
     note('N-0003', 'u-aarav', 'Claim CL-0001 approved. Collect FI-0001 from Central Library Desk with your college ID.', at(16, 20), true),
     note('N-0004', 'u-aarav', 'FI-0001 handed over at Central Library Desk. Report LR-0003 is now closed.', at(16), true),
-    note('N-0005', 'u-priya', 'Possible match for LR-0006 (Black backpack). Match score 78.', at(1, 20)),
-    note('N-0006', 'u-priya', 'Possible match for LR-0004 (Grey hoodie). Match score 69.', at(8), true),
-    note('N-0007', 'u-rohan', 'Possible match for LR-0007 (Hostel room keys). Match score 81.', at(0, 4)),
-    note('N-0008', 'u-rohan', 'Possible match for LR-0008 (Brown leather wallet). Match score 74.', at(3)),
-    note('N-0009', 'u-meera', 'Possible match for LR-0010 (ID card holder). Match score 88.', at(5, 20)),
+    note('N-0005', 'u-priya', 'Possible match for your report LR-0006: Black backpack found at OAT.', at(1, 20)),
+    note('N-0006', 'u-priya', 'Report LR-0004 received. We will tell you when a possible match comes in.', at(10), true),
+    note('N-0007', 'u-rohan', 'Possible match for your report LR-0007: Hostel room keys found at Boys Hostel.', at(0, 4)),
+    note('N-0008', 'u-rohan', 'Possible match for your report LR-0008: Brown leather wallet found at Canteen.', at(3)),
+    note('N-0009', 'u-meera', 'Possible match for your report LR-0010: ID card holder found at Admin Block.', at(5, 20)),
     note('N-0010', 'u-sunil', 'New claim CL-0002 for FI-0005 needs verification.', at(3, 5)),
     note('N-0011', 'u-sunil', 'FI-0006 logged at Boys Hostel Office.', at(0, 5), true),
     note('N-0012', 'u-kavita', '2 found items have been in custody for more than 30 days.', at(0, 2)),
