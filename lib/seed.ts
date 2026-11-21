@@ -42,12 +42,12 @@ export function createSeedData(now: Date = new Date()): DemoData {
 
   const users: User[] = [
     {
-      id: 'u-aarav',
-      name: 'Aarav Sharma',
-      email: 'aarav.sharma@dtu.ac.in',
-      phone: '+91 98110 24118',
+      id: 'u-shivam',
+      name: 'Shivam Kumar',
+      email: 'shivam.kumar@dtu.ac.in',
+      phone: '+91 98110 24265',
       role: 'student',
-      rollNo: '24/CO/118',
+      rollNo: '24/ME/265',
     },
     {
       id: 'u-priya',
@@ -102,7 +102,8 @@ export function createSeedData(now: Date = new Date()): DemoData {
   const lostReports: LostReport[] = [
     {
       id: 'LR-0001',
-      userId: 'u-aarav',
+      photo: '/items/lr-0001.jpg',
+      userId: 'u-shivam',
       categoryId: 'cat-electronics',
       title: 'iPhone 13',
       description:
@@ -113,7 +114,8 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0002',
-      userId: 'u-aarav',
+      photo: '/items/lr-0002.jpg',
+      userId: 'u-shivam',
       categoryId: 'cat-electronics',
       title: 'Scientific calculator',
       description: 'Casio fx-991ES Plus. My name is written on the back cover in marker.',
@@ -123,7 +125,8 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0003',
-      userId: 'u-aarav',
+      photo: '/items/lr-0003.jpg',
+      userId: 'u-shivam',
       categoryId: 'cat-electronics',
       title: 'Wired earphones',
       description: 'White wired earphones with a 3.5 mm jack, kept in a small black pouch.',
@@ -133,6 +136,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0004',
+      photo: '/items/lr-0004.jpg',
       userId: 'u-priya',
       categoryId: 'cat-clothing',
       title: 'Grey hoodie',
@@ -143,6 +147,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0005',
+      photo: '/items/lr-0005.jpg',
       userId: 'u-priya',
       categoryId: 'cat-books',
       title: 'Engineering Drawing textbook',
@@ -153,6 +158,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0006',
+      photo: '/items/lr-0006.jpg',
       userId: 'u-priya',
       categoryId: 'cat-bags',
       title: 'Black backpack',
@@ -163,6 +169,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0007',
+      photo: '/items/lr-0007.jpg',
       userId: 'u-rohan',
       categoryId: 'cat-keys',
       title: 'Hostel room keys',
@@ -173,6 +180,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0008',
+      photo: '/items/lr-0008.jpg',
       userId: 'u-rohan',
       categoryId: 'cat-accessories',
       title: 'Brown leather wallet',
@@ -183,6 +191,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0009',
+      photo: '/items/lr-0009.jpg',
       userId: 'u-meera',
       categoryId: 'cat-others',
       title: 'Steel water bottle',
@@ -193,6 +202,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'LR-0010',
+      photo: '/items/fi-0007.png',
       userId: 'u-meera',
       categoryId: 'cat-cards',
       title: 'ID card holder',
@@ -206,6 +216,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
   const foundItems: FoundItem[] = [
     {
       id: 'FI-0001',
+      photo: '/items/fi-0001.jpg',
       reportedBy: 'u-sunil',
       handedInBy: 'Library attendant',
       categoryId: 'cat-electronics',
@@ -219,6 +230,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0002',
+      photo: '/items/fi-0002.jpg',
       reportedBy: 'u-sunil',
       handedInBy: 'Sports Complex staff',
       categoryId: 'cat-others',
@@ -232,6 +244,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0003',
+      photo: '/items/fi-0003.jpg',
       reportedBy: 'u-rohan',
       handedInBy: 'Rohan Verma',
       categoryId: 'cat-electronics',
@@ -245,6 +258,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0004',
+      photo: '/items/fi-0004.jpg',
       reportedBy: 'u-sunil',
       handedInBy: 'Security guard, Gate 2',
       categoryId: 'cat-bags',
@@ -258,12 +272,13 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0005',
+      photo: '/items/fi-0005.jpg',
       reportedBy: 'u-sunil',
       handedInBy: 'Workshop instructor',
       categoryId: 'cat-electronics',
       title: 'Scientific calculator',
       publicDescription: 'Casio scientific calculator, found on a workbench in the drawing hall.',
-      hiddenDetails: "Name 'Aarav S.' written on the back cover in black marker.",
+      hiddenDetails: "Name 'Shivam K.' written on the back cover in black marker.",
       locationFound: 'Mechanical Workshop',
       dateFound: at(4, 4),
       heldAt: 'Admin Block Help Desk',
@@ -271,6 +286,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0006',
+      photo: '/items/fi-0006.jpg',
       reportedBy: 'u-sunil',
       handedInBy: 'Hostel warden',
       categoryId: 'cat-keys',
@@ -284,6 +300,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0007',
+      photo: '/items/fi-0007.png',
       reportedBy: 'u-sunil',
       categoryId: 'cat-cards',
       title: 'ID card holder',
@@ -296,6 +313,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0008',
+      photo: '/items/fi-0008.jpg',
       reportedBy: 'u-sunil',
       handedInBy: 'Canteen staff',
       categoryId: 'cat-clothing',
@@ -309,6 +327,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0009',
+      photo: '/items/fi-0009.jpg',
       reportedBy: 'u-sunil',
       categoryId: 'cat-books',
       title: 'Engineering Drawing textbook',
@@ -321,6 +340,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0010',
+      photo: '/items/fi-0010.jpg',
       reportedBy: 'u-meera',
       handedInBy: 'Dr. Meera Iyer',
       categoryId: 'cat-accessories',
@@ -334,6 +354,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0011',
+      photo: '/items/fi-0011.jpg',
       reportedBy: 'u-sunil',
       handedInBy: 'Workshop instructor',
       categoryId: 'cat-others',
@@ -347,6 +368,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     },
     {
       id: 'FI-0012',
+      photo: '/items/fi-0012.jpg',
       reportedBy: 'u-priya',
       handedInBy: 'Priya Nair',
       categoryId: 'cat-accessories',
@@ -392,7 +414,7 @@ export function createSeedData(now: Date = new Date()): DemoData {
     {
       id: 'CL-0001',
       foundItemId: 'FI-0001',
-      userId: 'u-aarav',
+      userId: 'u-shivam',
       lostReportId: 'LR-0003',
       proofOfOwnership:
         'White earphones in a black pouch. The pouch zip has a small tear. Bought in August from the campus store.',
@@ -406,10 +428,10 @@ export function createSeedData(now: Date = new Date()): DemoData {
     {
       id: 'CL-0002',
       foundItemId: 'FI-0005',
-      userId: 'u-aarav',
+      userId: 'u-shivam',
       lostReportId: 'LR-0002',
       proofOfOwnership:
-        "My name 'Aarav S.' is written on the back cover in black marker. I can show the purchase bill.",
+        "My name 'Shivam K.' is written on the back cover in black marker. I can show the purchase bill.",
       lostOn: at(5),
       lostAt: 'Mechanical Workshop',
       status: 'submitted',
@@ -426,10 +448,10 @@ export function createSeedData(now: Date = new Date()): DemoData {
   ): Notification => ({ id, userId, text, createdAt, read, channel: 'email and SMS, simulated' });
 
   const notifications: Notification[] = [
-    note('N-0001', 'u-aarav', 'Possible match for your report LR-0001: iPhone 13 found at Academic Block.', at(0, 18)),
-    note('N-0002', 'u-aarav', 'Claim CL-0002 submitted. The desk will review it.', at(3, 5)),
-    note('N-0003', 'u-aarav', 'Claim CL-0001 approved. Collect FI-0001 from Central Library Desk with your college ID.', at(16, 20), true),
-    note('N-0004', 'u-aarav', 'FI-0001 handed over at Central Library Desk. Report LR-0003 is now closed.', at(16), true),
+    note('N-0001', 'u-shivam', 'Possible match for your report LR-0001: iPhone 13 found at Academic Block.', at(0, 18)),
+    note('N-0002', 'u-shivam', 'Claim CL-0002 submitted. The desk will review it.', at(3, 5)),
+    note('N-0003', 'u-shivam', 'Claim CL-0001 approved. Collect FI-0001 from Central Library Desk with your college ID.', at(16, 20), true),
+    note('N-0004', 'u-shivam', 'FI-0001 handed over at Central Library Desk. Report LR-0003 is now closed.', at(16), true),
     note('N-0005', 'u-priya', 'Possible match for your report LR-0006: Black backpack found at OAT.', at(1, 20)),
     note('N-0006', 'u-priya', 'Report LR-0004 received. We will tell you when a possible match comes in.', at(10), true),
     note('N-0007', 'u-rohan', 'Possible match for your report LR-0007: Hostel room keys found at Boys Hostel.', at(0, 4)),
@@ -451,11 +473,11 @@ export function createSeedData(now: Date = new Date()): DemoData {
 
   const auditLogs: AuditLog[] = [
     log('A-0001', 'u-sunil', 'Logged found item', 'FoundItem', 'FI-0001', at(18)),
-    log('A-0002', 'u-aarav', 'Submitted claim', 'Claim', 'CL-0001', at(17, 6)),
+    log('A-0002', 'u-shivam', 'Submitted claim', 'Claim', 'CL-0001', at(17, 6)),
     log('A-0003', 'u-sunil', 'Approved claim', 'Claim', 'CL-0001', at(16, 20)),
     log('A-0004', 'u-sunil', 'Recorded handover', 'Claim', 'CL-0001', at(16)),
-    log('A-0005', 'u-aarav', 'Confirmed match', 'Match', 'M-0002', at(4)),
-    log('A-0006', 'u-aarav', 'Submitted claim', 'Claim', 'CL-0002', at(3, 5)),
+    log('A-0005', 'u-shivam', 'Confirmed match', 'Match', 'M-0002', at(4)),
+    log('A-0006', 'u-shivam', 'Submitted claim', 'Claim', 'CL-0002', at(3, 5)),
     log('A-0007', 'u-rohan', 'Reported found item', 'FoundItem', 'FI-0003', at(1)),
     log('A-0008', 'u-sunil', 'Logged found item', 'FoundItem', 'FI-0006', at(0, 5)),
   ];

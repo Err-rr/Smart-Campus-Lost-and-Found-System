@@ -10,7 +10,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow';
 import { BLUR_CAPTION, ItemPhoto } from '@/components/ui/ItemPhoto';
 import { NoticeBox } from '@/components/ui/NoticeBox';
 import { StatusPill, foundItemPill } from '@/components/ui/StatusPill';
-import { canSeeHiddenDetails, effectiveFoundStatus, isActiveClaim } from '@/lib/domain';
+import { canSeeHiddenDetails, effectiveFoundStatus, isActiveClaim, isCampusRole } from '@/lib/domain';
 import { formatDate, relativeTime } from '@/lib/format';
 import { useCurrentUser, useStore } from '@/lib/store';
 import { StatusTimeline } from './StatusTimeline';
@@ -106,6 +106,7 @@ export function FoundItemDetail({ id }: { id: string }) {
             </div>
           </Card>
 
+          {isCampusRole(user?.role) && (
           <Card className="p-6">
             {canClaim && (
               <>
@@ -143,6 +144,7 @@ export function FoundItemDetail({ id }: { id: string }) {
               </>
             )}
           </Card>
+          )}
         </div>
       </div>
     </div>

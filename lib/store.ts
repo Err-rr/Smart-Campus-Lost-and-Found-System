@@ -427,7 +427,7 @@ export const useStore = create<StoreState>()(
     }),
     {
       name: 'dtu-lost-found-demo',
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => safeStorage),
       // Older saved data used a different scoring model. Start from the fresh seed.
       migrate: (persisted) => ({

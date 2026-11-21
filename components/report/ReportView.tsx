@@ -8,7 +8,6 @@ import { Card } from '@/components/ui/Card';
 import { Field, Input, Select, Textarea } from '@/components/ui/Form';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { PhotoInput } from '@/components/ui/PhotoInput';
-import { Tabs } from '@/components/ui/Tabs';
 import { CAMPUS_LOCATIONS, DESKS } from '@/lib/seed';
 import { useCurrentUser, useStore } from '@/lib/store';
 
@@ -152,71 +151,71 @@ export function ReportView({ initialType }: { initialType: ReportType }) {
   const isFound = type === 'found';
 
   return (
-    <div className="flex flex-col gap-8">
-      <PageHeader
-        eyebrow="Report an item"
-        title="Report"
-        description="Tell us what you lost or found. Reports are checked against each other automatically."
-      />
-
-      <div className="w-full max-w-[640px]">
-        <Tabs
-          label="Report type"
-          value={type}
-          onChange={switchType}
-          tabs={[
-            { value: 'lost', label: 'I lost something' },
-            { value: 'found', label: 'I found something' },
-          ]}
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <PageHeader
+          eyebrow="Report an item"
+          title="Report"
+          description="Tell us what you lost or found. Reports are checked against each other automatically."
         />
-
-        <Card className="mt-6 p-5 sm:p-8">
-          <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
-            <Field id="f-categoryId" label="Category" error={errors.categoryId}>
-              <Select
-                id="f-categoryId"
-                value={form.categoryId}
-                invalid={!!errors.categoryId}
-                onChange={(e) => update('categoryId', e.target.value)}
-              >
-                <option value="">Choose a category</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-
-            <Field id="f-title" label="Item name" error={errors.title}>
-              <Input
-                id="f-title"
-                value={form.title}
-                invalid={!!errors.title}
-                maxLength={60}
-                placeholder={isFound ? 'e.g. Black backpack' : 'e.g. Scientific calculator'}
-                onChange={(e) => update('title', e.target.value)}
-              />
-            </Field>
-
-            <Field
-              id="f-description"
-              label="Description"
-              error={errors.description}
-              helper={
-                isFound
-                  ? 'Describe what anyone can see. Keep marks and contents for the field below.'
-                  : 'Colour, brand, size and anything that makes it easy to recognise.'
-              }
+        <div
+          role="tablist"
+          aria-label="Report type"
+          className="grid shrink-0 grid-cols-2 gap-1 rounded-[12px] border border-line bg-white p-1 lg:w-[360px]"
+        >
+          {(
+            [
+              { value: 'lost', label: 'I lost something' },
+              { value: 'found', label: 'I found something' },
+            ] as const
+          ).map((t) => (
+            <button
+              key={t.value}
+              type="button"
+              role="tab"
+              aria-selected={type === t.value}
+              onClick={() => switchType(t.value)}
+              className={`h-10 rounded-[9px] px-3 text-[14px] font-medium transition-colors ${
+                type === t.value ? 'bg-panel text-white' : 'text-ink-icon hover:bg-tile hover:text-ink'
+              }`}
             >
-              <Textarea
-                id="f-description"
-                value={form.description}
-                invalid={!!errors.description}
-                maxLength={400}
-                onChange={(e) => update('description', e.target.value)}
-              />
-            </Field>
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <Card className="p-5 sm:p-6 lg:p-8">
+        <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-x-8">
+          {/* Left column: what, where, when, photo */}
+          <div className="flex flex-col gap-5">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field id="f-categoryId" label="Category" error={errors.categoryId}>
+                <Select
+                  id="f-categoryId"
+                  value={form.categoryId}
+                  invalid={!!errors.categoryId}
+                  onChange={(e) => update('categoryId', e.target.value)}
+                >
+                  <option value="">Choose a category</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field id="f-title" label="Item name" error={errors.title}>
+                <Input
+                  id="f-title"
+                  value={form.title}
+                  invalid={!!errors.title}
+                  maxLength={60}
+                  placeholder={isFound ? 'e.g. Black backpack' : 'e.g. Scientific calculator'}
+                  onChange={(e) => update('title', e.target.value)}
+                />
+              </Field>
+            </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
               <Field id="f-location" label={isFound ? 'Where you found it' : 'Where you lost it'} error={errors.location}>
@@ -235,7 +234,6 @@ export function ReportView({ initialType }: { initialType: ReportType }) {
                   <option value={OTHER}>Other</option>
                 </Select>
               </Field>
-
               <Field id="f-date" label={isFound ? 'Date found' : 'Date lost'} error={errors.date}>
                 <Input
                   id="f-date"
@@ -261,68 +259,40 @@ export function ReportView({ initialType }: { initialType: ReportType }) {
               </Field>
             )}
 
-            <Field id="f-photo" label="Photo" optional={!isFound} error={errors.photo}>
-              <PhotoInput
-                id="f-photo"
-                value={form.photo}
-                invalid={!!errors.photo}
-                onChange={(v) => update('photo', v)}
-              />
-            </Field>
-
             {isFound && (
-              <>
-                <Field
-                  id="f-hiddenDetails"
-                  label="Identifying details"
-                  error={errors.hiddenDetails}
-                  helper="Only desk staff will see this. It is used to check ownership."
-                >
-                  <Textarea
-                    id="f-hiddenDetails"
-                    value={form.hiddenDetails}
-                    invalid={!!errors.hiddenDetails}
-                    maxLength={300}
-                    placeholder="e.g. Name inside the cover, sticker on the back, contents"
-                    onChange={(e) => update('hiddenDetails', e.target.value)}
-                  />
-                </Field>
-
-                <fieldset className="flex flex-col gap-2">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <fieldset className="flex flex-col gap-1.5">
                   <legend className="mb-1.5 text-[14px] font-medium text-ink">Where is the item now?</legend>
-                  {(
-                    [
-                      { value: 'desk', label: 'Handed in at a desk' },
-                      { value: 'with_me', label: 'I still have it' },
-                    ] as const
-                  ).map((opt) => (
-                    <label
-                      key={opt.value}
-                      className={`flex h-12 cursor-pointer items-center gap-3 rounded-[10px] border px-4 text-[15px] transition-colors ${
-                        form.whereNow === opt.value ? 'border-ink-icon bg-white' : 'border-line bg-white hover:border-[#D6D3CB]'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="whereNow"
-                        value={opt.value}
-                        checked={form.whereNow === opt.value}
-                        onChange={() => update('whereNow', opt.value)}
-                        className="h-4 w-4 accent-[#111111]"
-                      />
-                      {opt.label}
-                    </label>
-                  ))}
+                  <div className="grid h-11 grid-cols-2 gap-1 rounded-[10px] border border-line bg-white p-1">
+                    {(
+                      [
+                        { value: 'desk', label: 'At a desk' },
+                        { value: 'with_me', label: 'I still have it' },
+                      ] as const
+                    ).map((opt) => (
+                      <label
+                        key={opt.value}
+                        className={`flex cursor-pointer items-center justify-center rounded-[7px] text-[14px] transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-ink ${
+                          form.whereNow === opt.value ? 'bg-panel font-medium text-white' : 'text-ink-icon hover:bg-tile'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="whereNow"
+                          value={opt.value}
+                          checked={form.whereNow === opt.value}
+                          onChange={() => update('whereNow', opt.value)}
+                          className="sr-only"
+                        />
+                        {opt.label}
+                      </label>
+                    ))}
+                  </div>
                 </fieldset>
 
-                {form.whereNow === 'desk' && (
+                {form.whereNow === 'desk' ? (
                   <Field id="f-desk" label="Which desk?" error={errors.desk}>
-                    <Select
-                      id="f-desk"
-                      value={form.desk}
-                      invalid={!!errors.desk}
-                      onChange={(e) => update('desk', e.target.value)}
-                    >
+                    <Select id="f-desk" value={form.desk} invalid={!!errors.desk} onChange={(e) => update('desk', e.target.value)}>
                       <option value="">Choose a desk</option>
                       {DESKS.map((d) => (
                         <option key={d} value={d}>
@@ -331,22 +301,71 @@ export function ReportView({ initialType }: { initialType: ReportType }) {
                       ))}
                     </Select>
                   </Field>
+                ) : (
+                  <p className="self-end pb-2 text-[13px] text-ink-2">Please hand it in at the nearest desk within 2 days.</p>
                 )}
-              </>
+              </div>
             )}
 
-            <div className="flex flex-col-reverse gap-3 border-t border-divider pt-5 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-[13px] text-ink-2">Your name and contact details are never shown on public lists.</p>
-              <Button type="submit" size="lg">
-                {isFound ? 'Submit found item' : 'Submit lost report'}
-              </Button>
-            </div>
-          </form>
-        </Card>
-      </div>
+            <Field id="f-photo" label="Photo" optional={!isFound} error={errors.photo}>
+              <PhotoInput id="f-photo" value={form.photo} invalid={!!errors.photo} onChange={(v) => update('photo', v)} />
+            </Field>
+          </div>
+
+          {/* Right column: descriptions */}
+          <div className="flex flex-col gap-5">
+            <Field
+              id="f-description"
+              label="Description"
+              error={errors.description}
+              helper={
+                isFound
+                  ? 'What anyone can see. Keep marks and contents for the field below.'
+                  : 'Colour, brand, size and anything that makes it easy to recognise.'
+              }
+            >
+              <Textarea
+                id="f-description"
+                value={form.description}
+                invalid={!!errors.description}
+                maxLength={400}
+                rows={isFound ? 3 : 7}
+                onChange={(e) => update('description', e.target.value)}
+              />
+            </Field>
+
+            {isFound && (
+              <Field
+                id="f-hiddenDetails"
+                label="Identifying details"
+                error={errors.hiddenDetails}
+                helper="Only desk staff will see this. It is used to check ownership."
+              >
+                <Textarea
+                  id="f-hiddenDetails"
+                  value={form.hiddenDetails}
+                  invalid={!!errors.hiddenDetails}
+                  maxLength={300}
+                  rows={3}
+                  placeholder="e.g. Name inside the cover, sticker on the back, contents"
+                  onChange={(e) => update('hiddenDetails', e.target.value)}
+                />
+              </Field>
+            )}
+          </div>
+
+          <div className="flex flex-col-reverse gap-3 border-t border-divider pt-5 sm:flex-row sm:items-center sm:justify-between lg:col-span-2">
+            <p className="text-[13px] text-ink-2">Your name and contact details are never shown on public lists.</p>
+            <Button type="submit" size="lg">
+              {isFound ? 'Submit found item' : 'Submit lost report'}
+            </Button>
+          </div>
+        </form>
+      </Card>
     </div>
   );
 }
+
 
 function SuccessScreen({ result, onAnother }: { result: Result; onAnother: () => void }) {
   const lines: string[] =

@@ -140,7 +140,7 @@ export function Handover() {
                 id="collector-roll"
                 value={roll}
                 invalid={!!errors.roll}
-                placeholder={activeUser?.rollNo ? 'e.g. 24/CO/118' : 'Employee ID'}
+                placeholder={activeUser?.rollNo ? 'e.g. 24/ME/265' : 'Employee ID'}
                 className="font-mono"
                 onChange={(e) => {
                   setRoll(e.target.value);
