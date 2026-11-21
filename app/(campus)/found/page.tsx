@@ -4,5 +4,8 @@ import { FoundItemsView } from '@/components/found/FoundItemsView';
 export const metadata: Metadata = { title: 'Found Items' };
 
 export default function FoundItemsPage({ searchParams }: { searchParams: { q?: string; category?: string } }) {
-  return <FoundItemsView initialQuery={searchParams.q ?? ''} initialCategory={searchParams.category ?? ''} />;
+  const q = searchParams.q ?? '';
+  const category = searchParams.category ?? '';
+  // Keyed so a new search from Home resets the filters.
+  return <FoundItemsView key={`${q}|${category}`} initialQuery={q} initialCategory={category} />;
 }
