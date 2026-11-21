@@ -20,6 +20,7 @@ export function ItemPhoto({ categoryId, photo, blurred = false, className = '' }
         <img
           src={photo}
           alt=""
+          loading="lazy"
           className={`h-full w-full object-cover ${blurred ? 'scale-110 [filter:blur(10px)]' : ''}`}
         />
       ) : (

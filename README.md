@@ -10,12 +10,14 @@ Students and staff report lost or found items. A matching engine suggests likely
 
 Open the site and choose a role under **Demo mode: choose a role** on the sign-in page. To switch roles, click **Sign out** in the navbar and pick another one.
 
-| Role | Signs in as | Can use |
-| --- | --- | --- |
-| Student | Aarav Sharma, 24/CO/118 | Home, Lost Items, Found Items, Report, My Reports, About |
-| Faculty or Staff | Dr. Meera Iyer | Same as Student |
-| Desk Staff | Sunil Kumar | Everything above, plus the Desk Console |
-| Administrator | Kavita Rao | Everything above, plus the Admin Dashboard |
+| Role | Signs in as | Starts on | Pages |
+| --- | --- | --- | --- |
+| Student | Shivam Kumar, 24/ME/265 | Home | Home, Lost Items, Found Items, Report, My Reports |
+| Faculty or Staff | Dr. Meera Iyer | Home | Same as Student (both are campus users) |
+| Desk Staff | Sunil Kumar | Desk | Desk, Found Items, Lost Items |
+| Administrator | Kavita Rao | Dashboard | Dashboard, Desk, Found Items, Lost Items |
+
+Pages outside a role are hidden from its menu and blocked if opened directly.
 
 The student account starts with a strong match waiting (LR-0001 with FI-0003) and a claim under review (CL-0002), so the flows can be shown straight away.
 
@@ -68,6 +70,10 @@ lib/seed.ts          Sample users, reports, items, matches and claims
 lib/matching.ts      Matching engine
 lib/store.ts         Zustand store and all actions
 ```
+
+## Item photos
+
+Sample item photos are in `public/items/`. They come from Wikimedia Commons under CC0, public domain, CC BY and CC BY-SA licences. Authors, licences and source links are listed in [public/items/CREDITS.md](public/items/CREDITS.md). Keep that file if you reuse the photos.
 
 ## Logo
 

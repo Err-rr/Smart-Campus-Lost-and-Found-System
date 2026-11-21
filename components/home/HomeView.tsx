@@ -221,7 +221,7 @@ export function HomeView() {
             <ul className="divide-y divide-divider">
               {recent.map((item) => (
                 <li key={item.id} className="flex items-center gap-4 px-4 py-4 sm:px-5">
-                  <ItemThumb categoryId={item.categoryId} photo={item.photo} />
+                  <ItemThumb categoryId={item.categoryId} photo={item.photo} blurred />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline gap-2">
                       <p className="truncate text-[15px] font-medium text-ink">{item.title}</p>
