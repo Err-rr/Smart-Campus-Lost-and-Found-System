@@ -10,7 +10,11 @@ interface TabsProps<T extends string> {
 /** Underline tabs that match the navbar's active style. */
 export function Tabs<T extends string>({ tabs, value, onChange, label }: TabsProps<T>) {
   return (
-    <div role="tablist" aria-label={label} className="flex gap-6 overflow-x-auto border-b border-divider">
+    <div
+      role="tablist"
+      aria-label={label}
+      className="flex gap-6 overflow-x-auto overflow-y-hidden shadow-[inset_0_-1px_0_#ECEAE5] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
       {tabs.map((tab) => {
         const active = tab.value === value;
         return (
@@ -28,7 +32,7 @@ export function Tabs<T extends string>({ tabs, value, onChange, label }: TabsPro
             {tab.count !== undefined && (
               <span className="rounded-full bg-tile px-2 py-0.5 font-mono text-[11px] font-normal text-ink-2">{tab.count}</span>
             )}
-            {active && <span className="absolute inset-x-0 -bottom-px h-0.5 bg-accent" aria-hidden />}
+            {active && <span className="absolute inset-x-0 bottom-0 h-0.5 bg-accent" aria-hidden />}
           </button>
         );
       })}

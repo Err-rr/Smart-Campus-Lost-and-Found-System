@@ -5,6 +5,8 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    /* Reserve the scrollbar space so pages never shift sideways when content grows. */
+    scrollbar-gutter: stable;
   }
 
   body {

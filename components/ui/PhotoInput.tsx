@@ -42,9 +42,9 @@ export function PhotoInput({ id, value, onChange, invalid }: PhotoInputProps) {
       />
 
       {value ? (
-        <div className="flex items-center gap-4 rounded-[12px] border border-line bg-white p-3">
+        <div className="flex items-center gap-3 rounded-[12px] border border-line bg-white px-3 py-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={value} alt="Selected photo preview" className="h-20 w-20 rounded-[10px] object-cover" />
+          <img src={value} alt="Selected photo preview" className="h-10 w-10 rounded-tile object-cover" />
           <div className="min-w-0 flex-1">
             <p className="text-[14px] font-medium text-ink">Photo added</p>
             <p className="font-mono text-[12px] text-ink-3">{Math.round(dataUrlBytes(value) / 1024)} KB after compression</p>
@@ -63,13 +63,17 @@ export function PhotoInput({ id, value, onChange, invalid }: PhotoInputProps) {
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={busy}
-          className={`flex w-full flex-col items-center justify-center gap-2 rounded-[12px] border border-dashed bg-white px-4 py-7 text-center transition-colors hover:bg-[#FAFAF8] ${
+          className={`flex w-full items-center gap-3 rounded-[12px] border border-dashed bg-white px-3 py-3 text-left transition-colors hover:bg-[#FAFAF8] ${
             invalid ? 'border-[#A94438]' : 'border-[#D6D3CB]'
           }`}
         >
-          <ImagePlus size={22} strokeWidth={1.5} className={busy ? 'text-ink-3' : 'text-ink-icon'} aria-hidden />
-          <span className="text-[14px] font-medium text-ink">{busy ? 'Preparing photo' : 'Add a photo'}</span>
-          <span className="text-[13px] text-ink-2">JPG or PNG. It is resized to keep it under 1 MB.</span>
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-tile bg-tile">
+            <ImagePlus size={20} strokeWidth={1.5} className={busy ? 'text-ink-3' : 'text-ink-icon'} aria-hidden />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-[14px] font-medium text-ink">{busy ? 'Preparing photo' : 'Add a photo'}</span>
+            <span className="block text-[13px] text-ink-2">JPG or PNG, resized to stay under 1 MB</span>
+          </span>
         </button>
       )}
       {error && <p className="mt-1.5 text-[13px] text-[#A94438]">{error}</p>}

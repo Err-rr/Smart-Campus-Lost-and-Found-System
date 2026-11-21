@@ -9,7 +9,8 @@ import { Card } from '@/components/ui/Card';
 import { DtuLogo } from '@/components/ui/DtuLogo';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { IconTile } from '@/components/ui/IconTile';
-import { ROLE_LABEL } from '@/lib/domain';
+import { Skeleton } from '@/components/ui/Skeleton';
+import { ROLE_LABEL, homeFor } from '@/lib/domain';
 import { useHasHydrated, useStore } from '@/lib/store';
 import type { Role } from '@/lib/types';
 
@@ -29,18 +30,19 @@ export function LoginView() {
   const [ssoNotice, setSsoNotice] = useState(false);
 
   useEffect(() => {
-    if (hydrated && currentUserId) router.replace('/');
-  }, [hydrated, currentUserId, router]);
+    const me = users.find((u) => u.id === currentUserId);
+    if (hydrated && me) router.replace(homeFor(me.role));
+  }, [hydrated, currentUserId, users, router]);
 
   const choose = (role: Role) => {
     signInAsRole(role);
-    router.push('/');
+    router.push(homeFor(role));
   };
 
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex flex-1 items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-[440px] p-6 sm:p-8">
+        <Card className="w-full max-w-[440px] p-6 sm:p-8 md:max-w-[680px]">
           <div className="flex flex-col items-center text-center">
             <DtuLogo size={56} priority />
             <Eyebrow className="mt-5">Campus lost and found</Eyebrow>
@@ -48,11 +50,11 @@ export function LoginView() {
             <p className="mt-2 text-body text-ink-2">Use your DTU account to report and claim items.</p>
           </div>
 
-          <Button size="lg" className="mt-6 w-full" onClick={() => setSsoNotice(true)}>
+          <Button size="lg" className="mx-auto mt-6 flex w-full md:max-w-[360px]" onClick={() => setSsoNotice(true)}>
             Continue with Campus SSO
           </Button>
           {ssoNotice && (
-            <p role="status" className="mt-3 rounded-[10px] border border-notice-line bg-notice-bg px-4 py-3 text-[14px] text-ink">
+            <p role="status" className="mx-auto mt-3 rounded-[10px] md:max-w-[360px] border border-notice-line bg-notice-bg px-4 py-3 text-[14px] text-ink">
               Campus SSO is not connected in this demo build. Choose a role below.
             </p>
           )}
@@ -63,7 +65,7 @@ export function LoginView() {
               No real sign-in happens. All data stays in this browser.
             </p>
 
-            <ul className="mt-4 flex flex-col gap-2">
+            <ul className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-3">
               {ROLE_OPTIONS.map(({ role, icon, note }) => {
                 const user = hydrated ? users.find((u) => u.role === role) : undefined;
                 return (
@@ -76,14 +78,16 @@ export function LoginView() {
                       <IconTile icon={icon} />
                       <span className="min-w-0 flex-1">
                         <span className="block text-[15px] font-medium text-ink">{ROLE_LABEL[role]}</span>
-                        <span className="block truncate text-[13px] text-ink-2">
+                        <span className="block min-h-[20px] truncate text-[13px] text-ink-2">
                           {user ? (
                             <>
                               {user.name}
                               {user.rollNo && <span className="ml-1.5 font-mono text-[12px] text-ink-3">{user.rollNo}</span>}
                             </>
-                          ) : (
+                          ) : hydrated ? (
                             note
+                          ) : (
+                            <Skeleton className="mt-1 h-3 w-32" />
                           )}
                         </span>
                       </span>

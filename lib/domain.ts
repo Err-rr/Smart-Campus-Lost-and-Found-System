@@ -13,20 +13,49 @@ export interface NavLink {
   label: string;
 }
 
-const BASE_LINKS: NavLink[] = [
-  { href: '/', label: 'Home' },
-  { href: '/lost', label: 'Lost Items' },
-  { href: '/found', label: 'Found Items' },
-  { href: '/report', label: 'Report' },
-  { href: '/my-reports', label: 'My Reports' },
-  { href: '/about', label: 'About' },
-];
+/** Students and faculty or staff are both campus users: they report, search and claim. */
+export const CAMPUS_ROLES: Role[] = ['student', 'staff'];
+
+export function isCampusRole(role: Role | undefined): boolean {
+  return !!role && CAMPUS_ROLES.includes(role);
+}
+
+const NAV: Record<Role, NavLink[]> = {
+  student: [
+    { href: '/', label: 'Home' },
+    { href: '/lost', label: 'Lost Items' },
+    { href: '/found', label: 'Found Items' },
+    { href: '/report', label: 'Report' },
+    { href: '/my-reports', label: 'My Reports' },
+  ],
+  staff: [
+    { href: '/', label: 'Home' },
+    { href: '/lost', label: 'Lost Items' },
+    { href: '/found', label: 'Found Items' },
+    { href: '/report', label: 'Report' },
+    { href: '/my-reports', label: 'My Reports' },
+  ],
+  // Desk staff work from the console. Report and My Reports are not part of their job.
+  desk: [
+    { href: '/desk', label: 'Desk' },
+    { href: '/found', label: 'Found Items' },
+    { href: '/lost', label: 'Lost Items' },
+  ],
+  admin: [
+    { href: '/admin', label: 'Dashboard' },
+    { href: '/desk', label: 'Desk' },
+    { href: '/found', label: 'Found Items' },
+    { href: '/lost', label: 'Lost Items' },
+  ],
+};
 
 export function navLinksFor(role: Role): NavLink[] {
-  const links = [...BASE_LINKS];
-  if (role === 'desk' || role === 'admin') links.push({ href: '/desk', label: 'Desk' });
-  if (role === 'admin') links.push({ href: '/admin', label: 'Admin' });
-  return links;
+  return NAV[role];
+}
+
+/** Where each role lands after signing in, and where the logo links to. */
+export function homeFor(role: Role): string {
+  return role === 'desk' ? '/desk' : role === 'admin' ? '/admin' : '/';
 }
 
 export function isActivePath(pathname: string, href: string): boolean {

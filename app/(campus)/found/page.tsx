@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
-import { PlaceholderPage } from '@/components/layout/PlaceholderPage';
+import { FoundItemsView } from '@/components/found/FoundItemsView';
 
 export const metadata: Metadata = { title: 'Found Items' };
 
-export default function Page() {
-  return <PlaceholderPage title="Found Items" description="Items handed in at campus desks or reported found." />;
+export default function FoundItemsPage({ searchParams }: { searchParams: { q?: string; category?: string } }) {
+  const q = searchParams.q ?? '';
+  const category = searchParams.category ?? '';
+  // Keyed so a new search from Home resets the filters.
+  return <FoundItemsView key={`${q}|${category}`} initialQuery={q} initialCategory={category} />;
 }

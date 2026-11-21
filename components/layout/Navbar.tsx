@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { DtuLogo } from '@/components/ui/DtuLogo';
-import { isActivePath, navLinksFor } from '@/lib/domain';
+import { homeFor, isActivePath, navLinksFor } from '@/lib/domain';
 import { useStore } from '@/lib/store';
 import type { User } from '@/lib/types';
 import { NotificationBell } from './NotificationBell';
@@ -17,8 +17,6 @@ export function Navbar({ user }: { user: User }) {
   const signOut = useStore((s) => s.signOut);
   const [menuOpen, setMenuOpen] = useState(false);
   const links = navLinksFor(user.role);
-  // Desk and Admin add links, so the sign out label moves to wider screens.
-  const signOutLabel = links.length > 6 ? 'hidden 2xl:inline' : 'inline';
 
   useEffect(() => setMenuOpen(false), [pathname]);
 
@@ -30,18 +28,12 @@ export function Navbar({ user }: { user: User }) {
   return (
     <header className="relative z-30 border-b border-divider bg-white">
       <div className="mx-auto flex h-[72px] max-w-page items-center gap-6 px-4 sm:px-6">
-        <Link href="/" className="flex min-w-0 shrink-0 items-center gap-3">
+        <Link href={homeFor(user.role)} className="flex min-w-0 shrink-0 items-center gap-3">
           <DtuLogo priority />
-          <span className="flex flex-col leading-tight">
-            <span className="text-[16px] font-semibold text-ink">
-              <span className="sm:hidden">DTU</span>
-              <span className="hidden sm:inline">Delhi Technological University</span>
-            </span>
-            <span className="mt-0.5 font-mono text-eyebrow uppercase text-ink-3">Lost and Found</span>
-          </span>
+          <span className="whitespace-nowrap text-[17px] font-bold tracking-[-0.01em] text-ink">Lost and Found</span>
         </Link>
 
-        <nav aria-label="Main" className="hidden h-full items-stretch gap-6 xl:flex">
+        <nav aria-label="Main" className="hidden h-full items-stretch gap-6 lg:flex">
           {links.map((link) => {
             const active = isActivePath(pathname, link.href);
             return (
@@ -68,10 +60,10 @@ export function Navbar({ user }: { user: User }) {
             onClick={handleSignOut}
             aria-label="Sign out"
             title="Sign out"
-            className="hidden h-10 items-center gap-2 rounded-[10px] px-3 text-[15px] text-ink-icon transition-colors hover:bg-tile hover:text-ink xl:inline-flex"
+            className="hidden h-10 items-center gap-2 rounded-[10px] px-3 text-[15px] text-ink-icon transition-colors hover:bg-tile hover:text-ink lg:inline-flex"
           >
             <LogOut size={18} strokeWidth={1.5} aria-hidden />
-            <span className={signOutLabel}>Sign out</span>
+            <span>Sign out</span>
           </button>
           <button
             type="button"
@@ -79,7 +71,7 @@ export function Navbar({ user }: { user: User }) {
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-line text-ink transition-colors hover:bg-tile xl:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-[10px] border border-line text-ink transition-colors hover:bg-tile lg:hidden"
           >
             {menuOpen ? <X size={20} strokeWidth={1.5} /> : <Menu size={20} strokeWidth={1.5} />}
           </button>
@@ -87,7 +79,7 @@ export function Navbar({ user }: { user: User }) {
       </div>
 
       {menuOpen && (
-        <div id="mobile-menu" className="border-t border-divider bg-white xl:hidden">
+        <div id="mobile-menu" className="border-t border-divider bg-white lg:hidden">
           <div className="mx-auto max-w-page px-4 py-4 sm:px-6">
             <div className="mb-3 flex items-center justify-between gap-3 rounded-[12px] bg-tile px-4 py-3">
               <div className="min-w-0">

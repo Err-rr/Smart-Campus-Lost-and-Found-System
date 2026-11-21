@@ -50,7 +50,7 @@ const ACTIONS: { title: string; text: string; href: string; icon: LucideIcon }[]
   {
     title: 'Verified Handover',
     text: 'Items are released only after the desk checks your proof of ownership and college ID.',
-    href: '/about',
+    href: '/my-reports?tab=claims',
     icon: ShieldCheck,
   },
 ];

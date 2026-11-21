@@ -12,8 +12,11 @@ import type {
   Match,
   Notification,
   Role,
+  Settings,
   User,
 } from './types';
+import { formatDate } from './format';
+import { ROLE_LABEL } from './domain';
 
 export type NewLostReport = Omit<LostReport, 'id' | 'userId' | 'status'>;
 export type NewFoundItem = Omit<FoundItem, 'id' | 'reportedBy' | 'status'>;
@@ -26,10 +29,23 @@ interface StoreState extends DemoData {
   markNotificationsRead: (userId: string) => void;
   resetDemoData: () => void;
   addLostReport: (input: NewLostReport) => { report: LostReport; matches: Match[] };
-  addFoundItem: (input: NewFoundItem) => { item: FoundItem; matches: Match[] };
+  addFoundItem: (input: NewFoundItem, auditAction?: string) => { item: FoundItem; matches: Match[] };
   submitClaim: (input: NewClaim) => Claim;
   dismissMatch: (matchId: string) => void;
+  // Desk
+  approveClaim: (claimId: string) => void;
+  rejectClaim: (claimId: string, reason: string) => void;
+  confirmHandover: (claimId: string, collectorRollNo: string) => void;
+  markUnclaimed: (foundItemId: string) => void;
+  // Admin
+  changeUserRole: (userId: string, role: Role) => void;
+  addCategory: (name: string) => void;
+  renameCategory: (categoryId: string, name: string) => void;
+  deleteCategory: (categoryId: string) => void;
+  updateSettings: (settings: Partial<Settings>) => void;
 }
+
+export const HOME_DESK = 'Central Lost and Found Desk';
 
 /** localStorage can be full or blocked. The demo keeps working in memory if so. */
 const safeStorage: StateStorage = {
@@ -75,8 +91,9 @@ function makeLog(
   action: string,
   entity: AuditLog['entity'],
   entityId: string,
+  details?: string,
 ): AuditLog {
-  return { id: nextId('A', existing), actorId, action, entity, entityId, timestamp: nowIso() };
+  return { id: nextId('A', existing), actorId, action, entity, entityId, timestamp: nowIso(), details };
 }
 
 /**
@@ -162,7 +179,7 @@ export const useStore = create<StoreState>()(
         return { report: applied.lostReports.find((r) => r.id === report.id)!, matches: newMatches };
       },
 
-      addFoundItem: (input) => {
+      addFoundItem: (input, auditAction = 'Reported found item') => {
         const state = get();
         const userId = state.currentUserId!;
         const item: FoundItem = {
@@ -174,7 +191,7 @@ export const useStore = create<StoreState>()(
         const foundItems = [...state.foundItems, item];
         const auditLogs = [
           ...state.auditLogs,
-          makeLog(state.auditLogs, userId, 'Reported found item', 'FoundItem', item.id),
+          makeLog(state.auditLogs, userId, auditAction, 'FoundItem', item.id),
         ];
         const newMatches = findNewMatches({
           scope: { foundItemId: item.id },
@@ -248,10 +265,169 @@ export const useStore = create<StoreState>()(
           ],
         });
       },
+
+      approveClaim: (claimId) => {
+        const state = get();
+        const claim = state.claims.find((c) => c.id === claimId);
+        if (!claim || claim.status !== 'submitted') return;
+        set({
+          claims: state.claims.map((c) => (c.id === claimId ? { ...c, status: 'approved' } : c)),
+          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Approved claim', 'Claim', claimId)],
+          notifications: [
+            ...state.notifications,
+            makeNotification(
+              state.notifications,
+              claim.userId,
+              `Claim ${claimId} approved. Collect your item from ${HOME_DESK} with your college ID.`,
+            ),
+          ],
+        });
+      },
+
+      rejectClaim: (claimId, reason) => {
+        const state = get();
+        const claim = state.claims.find((c) => c.id === claimId);
+        if (!claim || claim.status !== 'submitted') return;
+        const claims = state.claims.map((c) =>
+          c.id === claimId ? { ...c, status: 'rejected' as const, rejectionReason: reason } : c,
+        );
+        const otherActive = claims.some(
+          (c) => c.foundItemId === claim.foundItemId && (c.status === 'submitted' || c.status === 'approved'),
+        );
+        set({
+          claims,
+          foundItems: state.foundItems.map((f) =>
+            f.id === claim.foundItemId && f.status === 'claim_pending' && !otherActive ? { ...f, status: 'in_custody' } : f,
+          ),
+          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Rejected claim', 'Claim', claimId, reason)],
+          notifications: [
+            ...state.notifications,
+            makeNotification(state.notifications, claim.userId, `Claim ${claimId} rejected. Reason: ${reason}`),
+          ],
+        });
+      },
+
+      confirmHandover: (claimId, collectorRollNo) => {
+        const state = get();
+        const claim = state.claims.find((c) => c.id === claimId);
+        if (!claim || claim.status !== 'approved') return;
+        const now = nowIso();
+        const deskUserId = state.currentUserId!;
+        set({
+          claims: state.claims.map((c) => {
+            if (c.id === claimId) {
+              return { ...c, status: 'handed_over' as const, handoverDate: now, handedOverBy: deskUserId };
+            }
+            // Other open claims on the same item can no longer succeed.
+            if (c.foundItemId === claim.foundItemId && (c.status === 'submitted' || c.status === 'approved')) {
+              return { ...c, status: 'rejected' as const, rejectionReason: 'The item was handed over to its owner.' };
+            }
+            return c;
+          }),
+          foundItems: state.foundItems.map((f) => (f.id === claim.foundItemId ? { ...f, status: 'returned' } : f)),
+          lostReports: state.lostReports.map((r) => (r.id === claim.lostReportId ? { ...r, status: 'closed' } : r)),
+          auditLogs: [
+            ...state.auditLogs,
+            makeLog(
+              state.auditLogs,
+              deskUserId,
+              'Recorded handover',
+              'Claim',
+              claimId,
+              `Collected by ${collectorRollNo}. College ID checked.`,
+            ),
+          ],
+          notifications: [
+            ...state.notifications,
+            makeNotification(
+              state.notifications,
+              claim.userId,
+              `Your item ${claim.foundItemId} was handed over on ${formatDate(now)}.`,
+            ),
+          ],
+        });
+      },
+
+      markUnclaimed: (foundItemId) => {
+        const state = get();
+        set({
+          foundItems: state.foundItems.map((f) =>
+            f.id === foundItemId && f.status === 'in_custody' ? { ...f, status: 'unclaimed' } : f,
+          ),
+          auditLogs: [
+            ...state.auditLogs,
+            makeLog(state.auditLogs, state.currentUserId!, 'Marked as unclaimed', 'FoundItem', foundItemId),
+          ],
+        });
+      },
+
+      changeUserRole: (userId, role) => {
+        const state = get();
+        const user = state.users.find((u) => u.id === userId);
+        if (!user || user.role === role) return;
+        set({
+          users: state.users.map((u) => (u.id === userId ? { ...u, role } : u)),
+          auditLogs: [
+            ...state.auditLogs,
+            makeLog(state.auditLogs, state.currentUserId!, 'Changed role', 'User', userId, `${user.name}: ${ROLE_LABEL[user.role]} to ${ROLE_LABEL[role]}`),
+          ],
+        });
+      },
+
+      addCategory: (name) => {
+        const state = get();
+        const id = `cat-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${Date.now().toString(36)}`;
+        set({
+          categories: [...state.categories, { id, name }],
+          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Added category', 'Category', id, name)],
+        });
+      },
+
+      renameCategory: (categoryId, name) => {
+        const state = get();
+        set({
+          categories: state.categories.map((c) => (c.id === categoryId ? { ...c, name } : c)),
+          auditLogs: [
+            ...state.auditLogs,
+            makeLog(state.auditLogs, state.currentUserId!, 'Renamed category', 'Category', categoryId, `${state.categories.find((c) => c.id === categoryId)?.name} to ${name}`),
+          ],
+        });
+      },
+
+      deleteCategory: (categoryId) => {
+        const state = get();
+        const inUse =
+          state.lostReports.some((r) => r.categoryId === categoryId) ||
+          state.foundItems.some((f) => f.categoryId === categoryId);
+        if (inUse) return;
+        set({
+          categories: state.categories.filter((c) => c.id !== categoryId),
+          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Deleted category', 'Category', categoryId)],
+        });
+      },
+
+      updateSettings: (patch) => {
+        const state = get();
+        const settings = { ...state.settings, ...patch };
+        set({
+          settings,
+          auditLogs: [
+            ...state.auditLogs,
+            makeLog(
+              state.auditLogs,
+              state.currentUserId!,
+              'Updated settings',
+              'Settings',
+              'settings',
+              `Match threshold ${settings.matchThreshold}, unclaimed after ${settings.unclaimedDays} days`,
+            ),
+          ],
+        });
+      },
     }),
     {
       name: 'dtu-lost-found-demo',
-      version: 2,
+      version: 3,
       storage: createJSONStorage(() => safeStorage),
       // Older saved data used a different scoring model. Start from the fresh seed.
       migrate: (persisted) => ({

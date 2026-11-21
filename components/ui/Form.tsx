@@ -64,11 +64,12 @@ export function Select({ invalid, className = '', children, ...props }: SelectHT
   );
 }
 
-export function Textarea({ invalid, className = '', ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & WithInvalid) {
+export function Textarea({ invalid, className = '', rows = 4, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & WithInvalid) {
   return (
     <textarea
       aria-invalid={invalid || undefined}
-      className={`${control} ${border(invalid)} min-h-[110px] py-3 leading-relaxed ${className}`}
+      rows={rows}
+      className={`${control} ${border(invalid)} block resize-y py-2.5 leading-relaxed ${className}`}
       {...props}
     />
   );
