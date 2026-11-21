@@ -2,9 +2,8 @@
 
 import { Briefcase, ChevronRight, GraduationCap, Inbox, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Footer } from '@/components/layout/Footer';
-import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { DtuLogo } from '@/components/ui/DtuLogo';
 import { Eyebrow } from '@/components/ui/Eyebrow';
@@ -27,7 +26,6 @@ export function LoginView() {
   const currentUserId = useStore((s) => s.currentUserId);
   const users = useStore((s) => s.users);
   const signInAsRole = useStore((s) => s.signInAsRole);
-  const [ssoNotice, setSsoNotice] = useState(false);
 
   useEffect(() => {
     const me = users.find((u) => u.id === currentUserId);
@@ -55,24 +53,11 @@ export function LoginView() {
             <DtuLogo size={56} priority />
             <Eyebrow className="mt-5">Campus lost and found</Eyebrow>
             <h1 className="mt-2 text-[28px] font-semibold tracking-[-0.02em] text-ink">Sign in</h1>
-            <p className="mt-2 text-body text-ink-2">Use your DTU account to report and claim items.</p>
+            <p className="mt-2 text-body text-ink-2">Choose your role to continue.</p>
           </div>
 
-          <div className="mt-6 flex justify-center">
-            <Button size="lg" className="w-full md:w-[360px]" onClick={() => setSsoNotice(true)}>
-              Continue with Campus SSO
-            </Button>
-          </div>
-          {ssoNotice && (
-            <p role="status" className="mx-auto mt-3 w-full rounded-[10px] text-center md:w-[360px] border border-notice-line bg-notice-bg px-4 py-3 text-[14px] text-ink">
-              Campus SSO is not connected in this demo build. Choose a role below.
-            </p>
-          )}
-
-          <div className="mt-8 border-t border-divider pt-6">
-            <Eyebrow>Demo mode: choose a role</Eyebrow>
-
-            <ul className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-3">
+          <div className="mt-8">
+            <ul className="grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-3">
               {ROLE_OPTIONS.map(({ role, icon, note }) => {
                 const user = hydrated ? users.find((u) => u.role === role) : undefined;
                 return (
@@ -80,16 +65,16 @@ export function LoginView() {
                     <button
                       type="button"
                       onClick={() => choose(role)}
-                      className="flex w-full items-center gap-3 rounded-[12px] border border-line bg-white p-3 text-left transition-colors hover:border-[#D6D3CB] hover:bg-[#FAFAF8]"
+                      className="group flex w-full items-center gap-3 rounded-[12px] border border-line bg-white p-3 text-left transition-colors hover:border-accent hover:bg-accent focus-visible:border-accent focus-visible:bg-accent"
                     >
-                      <IconTile icon={icon} />
+                      <IconTile icon={icon} className="transition-colors group-hover:bg-white group-hover:text-ink group-focus-visible:bg-white group-focus-visible:text-ink" />
                       <span className="min-w-0 flex-1">
                         <span className="block text-[15px] font-medium text-ink">{ROLE_LABEL[role]}</span>
-                        <span className="block min-h-[20px] truncate text-[13px] text-ink-2">
+                        <span className="block min-h-[20px] truncate text-[13px] text-ink-2 transition-colors group-hover:text-ink group-focus-visible:text-ink">
                           {user ? (
                             <>
                               {user.name}
-                              {user.rollNo && <span className="ml-1.5 font-mono text-[12px] text-ink-3">{user.rollNo}</span>}
+                              {user.rollNo && <span className="ml-1.5 font-mono text-[12px] text-ink-3 transition-colors group-hover:text-ink group-focus-visible:text-ink">{user.rollNo}</span>}
                             </>
                           ) : hydrated ? (
                             note
@@ -98,7 +83,7 @@ export function LoginView() {
                           )}
                         </span>
                       </span>
-                      <ChevronRight size={18} strokeWidth={1.5} className="shrink-0 text-ink-3" aria-hidden />
+                      <ChevronRight size={18} strokeWidth={1.5} className="shrink-0 text-ink-3 transition-colors group-hover:text-ink group-focus-visible:text-ink" aria-hidden />
                     </button>
                   </li>
                 );

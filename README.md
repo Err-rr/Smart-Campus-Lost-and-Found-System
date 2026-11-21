@@ -8,7 +8,7 @@ Students and staff report lost or found items. A matching engine suggests likely
 
 ## Demo roles
 
-Open the site and choose a role under **Demo mode: choose a role** on the sign-in page. To switch roles, click **Sign out** in the navbar and pick another one.
+Open the site and pick one of the four roles on the sign-in page. To switch roles, click **Sign out** in the navbar and pick another one.
 
 | Role | Signs in as | Starts on | Pages |
 | --- | --- | --- | --- |
