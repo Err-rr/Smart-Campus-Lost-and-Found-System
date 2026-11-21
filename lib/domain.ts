@@ -52,7 +52,10 @@ export interface UserActivity {
   claimsInProgress: number;
 }
 
-export function userActivity(data: DemoData, userId: string): UserActivity {
+export function userActivity(
+  data: Pick<DemoData, 'lostReports' | 'matches' | 'claims' | 'settings'>,
+  userId: string,
+): UserActivity {
   const myReports = data.lostReports.filter((r) => r.userId === userId);
   const openIds = new Set(myReports.filter((r) => r.status === 'open').map((r) => r.id));
 
