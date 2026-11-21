@@ -50,11 +50,13 @@ export function LoginView() {
             <p className="mt-2 text-body text-ink-2">Use your DTU account to report and claim items.</p>
           </div>
 
-          <Button size="lg" className="mx-auto mt-6 flex w-full md:max-w-[360px]" onClick={() => setSsoNotice(true)}>
-            Continue with Campus SSO
-          </Button>
+          <div className="mt-6 flex justify-center">
+            <Button size="lg" className="w-full md:w-[360px]" onClick={() => setSsoNotice(true)}>
+              Continue with Campus SSO
+            </Button>
+          </div>
           {ssoNotice && (
-            <p role="status" className="mx-auto mt-3 rounded-[10px] md:max-w-[360px] border border-notice-line bg-notice-bg px-4 py-3 text-[14px] text-ink">
+            <p role="status" className="mx-auto mt-3 w-full rounded-[10px] text-center md:w-[360px] border border-notice-line bg-notice-bg px-4 py-3 text-[14px] text-ink">
               Campus SSO is not connected in this demo build. Choose a role below.
             </p>
           )}
