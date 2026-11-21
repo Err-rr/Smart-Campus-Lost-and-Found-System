@@ -171,7 +171,7 @@ export function ClaimView({ id }: { id: string }) {
 
       <div className="w-full max-w-[640px]">
         <Card className="flex items-center gap-4 p-4">
-          <ItemThumb categoryId={item.categoryId} photo={item.photo} blurred />
+          <ItemThumb categoryId={item.categoryId} photo={item.photo} />
           <div className="min-w-0">
             <p className="text-[15px] font-medium text-ink">{item.title}</p>
             <p className="text-[14px] text-ink-2">

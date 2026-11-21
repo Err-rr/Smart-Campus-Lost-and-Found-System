@@ -63,9 +63,6 @@ export function LoginView() {
 
           <div className="mt-8 border-t border-divider pt-6">
             <Eyebrow>Demo mode: choose a role</Eyebrow>
-            <p className="mt-1.5 text-[14px] text-ink-2">
-              No real sign-in happens. All data stays in this browser.
-            </p>
 
             <ul className="mt-4 grid grid-cols-1 gap-2 md:grid-cols-2 md:gap-3">
               {ROLE_OPTIONS.map(({ role, icon, note }) => {

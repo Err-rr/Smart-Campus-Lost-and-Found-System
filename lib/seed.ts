@@ -437,7 +437,77 @@ export function createSeedData(now: Date = new Date()): DemoData {
       status: 'submitted',
       submittedOn: at(3, 5),
     },
+    // Waiting for the desk to check
+    {
+      id: 'CL-0003',
+      foundItemId: 'FI-0004',
+      userId: 'u-priya',
+      lostReportId: 'LR-0006',
+      proofOfOwnership:
+        "Black Wildcraft bag. There is a notebook inside with 'Priya' on the cover and a steel bottle in the side pocket.",
+      lostOn: at(2, 3),
+      lostAt: 'OAT',
+      status: 'submitted',
+      submittedOn: at(1, 4),
+    },
+    {
+      id: 'CL-0004',
+      foundItemId: 'FI-0006',
+      userId: 'u-rohan',
+      lostReportId: 'LR-0007',
+      proofOfOwnership: "Two keys on a red ring. The paper tag says 214, which is my room in Boys Hostel.",
+      lostOn: at(0, 9),
+      lostAt: 'Boys Hostel',
+      status: 'submitted',
+      submittedOn: at(0, 3),
+    },
+    {
+      id: 'CL-0005',
+      foundItemId: 'FI-0009',
+      userId: 'u-priya',
+      lostReportId: 'LR-0005',
+      proofOfOwnership: 'My name is written on the first page. I made pencil notes in chapter 4 on isometric views.',
+      lostOn: at(13),
+      lostAt: 'Academic Block',
+      status: 'submitted',
+      submittedOn: at(2, 2),
+    },
+    // Approved, waiting for the owner to collect
+    {
+      id: 'CL-0006',
+      foundItemId: 'FI-0007',
+      userId: 'u-meera',
+      lostReportId: 'LR-0010',
+      proofOfOwnership: 'Black lanyard with my staff ID. My library card is kept behind the ID in the same holder.',
+      lostOn: at(6, 2),
+      lostAt: 'Admin Block',
+      status: 'approved',
+      submittedOn: at(4, 6),
+    },
+    {
+      id: 'CL-0007',
+      foundItemId: 'FI-0010',
+      userId: 'u-rohan',
+      lostReportId: 'LR-0008',
+      proofOfOwnership: 'Brown leather wallet with my Delhi Metro card and a passport size photo in the front slot.',
+      lostOn: at(4),
+      lostAt: 'Canteen',
+      status: 'approved',
+      submittedOn: at(2, 8),
+    },
   ];
+
+  // Items with an open claim are marked as claim pending.
+  const claimed = new Set(claims.filter((c) => c.status === 'submitted' || c.status === 'approved').map((c) => c.foundItemId));
+  for (const item of foundItems) {
+    if (claimed.has(item.id) && item.status === 'in_custody') item.status = 'claim_pending';
+  }
+  // A claim linked to a report confirms that suggested match.
+  for (const m of matches) {
+    if (m.status === 'suggested' && claims.some((c) => c.lostReportId === m.lostReportId && c.foundItemId === m.foundItemId)) {
+      m.status = 'confirmed';
+    }
+  }
 
   const note = (
     id: string,
@@ -460,6 +530,12 @@ export function createSeedData(now: Date = new Date()): DemoData {
     note('N-0010', 'u-sunil', 'New claim CL-0002 for FI-0005 needs verification.', at(3, 5)),
     note('N-0011', 'u-sunil', 'FI-0006 logged at Boys Hostel Office.', at(0, 5), true),
     note('N-0012', 'u-kavita', '2 found items have been in custody for more than 30 days.', at(0, 2)),
+    note('N-0013', 'u-priya', 'Claim CL-0003 submitted. The desk will review it.', at(1, 4)),
+    note('N-0014', 'u-rohan', 'Claim CL-0004 submitted. The desk will review it.', at(0, 3)),
+    note('N-0015', 'u-priya', 'Claim CL-0005 submitted. The desk will review it.', at(2, 2)),
+    note('N-0016', 'u-meera', 'Claim CL-0006 approved. Collect your item from Central Lost and Found Desk with your college ID.', at(2)),
+    note('N-0017', 'u-rohan', 'Claim CL-0007 approved. Collect your item from Central Lost and Found Desk with your college ID.', at(1, 3)),
+    note('N-0018', 'u-sunil', '4 claims are waiting for verification.', at(0, 3)),
   ];
 
   const log = (
@@ -480,6 +556,13 @@ export function createSeedData(now: Date = new Date()): DemoData {
     log('A-0006', 'u-shivam', 'Submitted claim', 'Claim', 'CL-0002', at(3, 5)),
     log('A-0007', 'u-rohan', 'Reported found item', 'FoundItem', 'FI-0003', at(1)),
     log('A-0008', 'u-sunil', 'Logged found item', 'FoundItem', 'FI-0006', at(0, 5)),
+    log('A-0009', 'u-meera', 'Submitted claim', 'Claim', 'CL-0006', at(4, 6)),
+    log('A-0010', 'u-rohan', 'Submitted claim', 'Claim', 'CL-0007', at(2, 8)),
+    log('A-0011', 'u-priya', 'Submitted claim', 'Claim', 'CL-0005', at(2, 2)),
+    log('A-0012', 'u-sunil', 'Approved claim', 'Claim', 'CL-0006', at(2)),
+    log('A-0013', 'u-priya', 'Submitted claim', 'Claim', 'CL-0003', at(1, 4)),
+    log('A-0014', 'u-sunil', 'Approved claim', 'Claim', 'CL-0007', at(1, 3)),
+    log('A-0015', 'u-rohan', 'Submitted claim', 'Claim', 'CL-0004', at(0, 3)),
   ];
 
   return {

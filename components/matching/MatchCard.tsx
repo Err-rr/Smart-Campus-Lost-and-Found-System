@@ -3,7 +3,7 @@
 import { Check, MapPin } from 'lucide-react';
 import { Button, ButtonLink } from '@/components/ui/Button';
 import { Eyebrow } from '@/components/ui/Eyebrow';
-import { BLUR_CAPTION, ItemPhoto } from '@/components/ui/ItemPhoto';
+import { ItemPhoto } from '@/components/ui/ItemPhoto';
 import { formatDate } from '@/lib/format';
 import { calendarDayGap, FACTOR_LABEL, FACTOR_MAX, FACTOR_ORDER } from '@/lib/matching';
 import type { FoundItem, LostReport, Match, MatchFactor } from '@/lib/types';
@@ -45,11 +45,10 @@ interface MatchCardProps {
   match: Match;
   report: LostReport;
   item: FoundItem;
-  blurPhoto: boolean;
   onDismiss?: () => void;
 }
 
-export function MatchCard({ match, report, item, blurPhoto, onDismiss }: MatchCardProps) {
+export function MatchCard({ match, report, item, onDismiss }: MatchCardProps) {
   const confirmed = match.status === 'confirmed';
 
   return (
@@ -59,7 +58,6 @@ export function MatchCard({ match, report, item, blurPhoto, onDismiss }: MatchCa
         <ItemPhoto
           categoryId={item.categoryId}
           photo={item.photo}
-          blurred={blurPhoto}
           className="h-16 w-16 shrink-0 rounded-[12px] [&_svg]:h-6 [&_svg]:w-6"
         />
         <div className="min-w-0 flex-1">
@@ -76,7 +74,6 @@ export function MatchCard({ match, report, item, blurPhoto, onDismiss }: MatchCa
             <span>{formatDate(item.dateFound)}</span>
           </p>
           <p className="mt-0.5 text-[13px] text-ink-3">Held at {item.heldAt}</p>
-          {blurPhoto && item.photo && <p className="mt-0.5 text-[12px] text-ink-3">{BLUR_CAPTION}</p>}
         </div>
         <div className="shrink-0 text-right">
           <p className="font-mono text-[24px] font-medium leading-none text-ink">{match.matchScore}</p>

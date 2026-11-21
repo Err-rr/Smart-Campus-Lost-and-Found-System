@@ -78,7 +78,7 @@ export function DeskLogForm() {
   };
 
   return (
-    <div className="w-full max-w-[640px]">
+    <div className="w-full">
       {logged && (
         <div role="status" className="mb-4 flex gap-3 rounded-card border border-notice-line bg-notice-bg p-4 text-[14px] text-ink">
           <Check size={18} strokeWidth={1.5} className="mt-0.5 shrink-0" aria-hidden />
@@ -91,69 +91,75 @@ export function DeskLogForm() {
         </div>
       )}
 
-      <Card className="p-5 sm:p-8">
-        <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field id="d-categoryId" label="Category" error={errors.categoryId}>
-              <Select id="d-categoryId" value={form.categoryId} invalid={!!errors.categoryId} onChange={(e) => update('categoryId', e.target.value)}>
-                <option value="">Choose a category</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </Select>
+      <Card className="p-5 sm:p-6 lg:p-8">
+        <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-x-8">
+          {/* Left column: what, where, when, who, photo */}
+          <div className="flex flex-col gap-5">
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field id="d-categoryId" label="Category" error={errors.categoryId}>
+                <Select id="d-categoryId" value={form.categoryId} invalid={!!errors.categoryId} onChange={(e) => update('categoryId', e.target.value)}>
+                  <option value="">Choose a category</option>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field id="d-title" label="Item name" error={errors.title}>
+                <Input id="d-title" value={form.title} maxLength={60} invalid={!!errors.title} placeholder="e.g. Black backpack" onChange={(e) => update('title', e.target.value)} />
+              </Field>
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-2">
+              <Field id="d-location" label="Where it was found" error={errors.location}>
+                <Select id="d-location" value={form.location} invalid={!!errors.location} onChange={(e) => update('location', e.target.value)}>
+                  <option value="">Choose a location</option>
+                  {CAMPUS_LOCATIONS.map((l) => (
+                    <option key={l} value={l}>
+                      {l}
+                    </option>
+                  ))}
+                  <option value={OTHER}>Other</option>
+                </Select>
+              </Field>
+              <Field id="d-date" label="Date found" error={errors.date}>
+                <Input id="d-date" type="date" value={form.date} max={todayInput()} invalid={!!errors.date} onChange={(e) => update('date', e.target.value)} />
+              </Field>
+            </div>
+
+            {form.location === OTHER && (
+              <Field id="d-otherLocation" label="Other location" error={errors.otherLocation}>
+                <Input id="d-otherLocation" value={form.otherLocation} maxLength={60} invalid={!!errors.otherLocation} onChange={(e) => update('otherLocation', e.target.value)} />
+              </Field>
+            )}
+
+            <Field id="d-handedInBy" label="Handed in by" error={errors.handedInBy} helper="Name or roll number of the person who brought it.">
+              <Input id="d-handedInBy" value={form.handedInBy} maxLength={60} invalid={!!errors.handedInBy} placeholder="e.g. 24/EE/031" onChange={(e) => update('handedInBy', e.target.value)} />
             </Field>
-            <Field id="d-title" label="Item name" error={errors.title}>
-              <Input id="d-title" value={form.title} maxLength={60} invalid={!!errors.title} onChange={(e) => update('title', e.target.value)} />
+
+            <Field id="d-photo" label="Photo" error={errors.photo}>
+              <PhotoInput id="d-photo" value={form.photo} invalid={!!errors.photo} onChange={(v) => update('photo', v)} />
             </Field>
           </div>
 
-          <Field id="d-description" label="Description" error={errors.description} helper="What anyone can see. Shown on Found Items.">
-            <Textarea id="d-description" value={form.description} maxLength={400} invalid={!!errors.description} onChange={(e) => update('description', e.target.value)} />
-          </Field>
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field id="d-location" label="Where it was found" error={errors.location}>
-              <Select id="d-location" value={form.location} invalid={!!errors.location} onChange={(e) => update('location', e.target.value)}>
-                <option value="">Choose a location</option>
-                {CAMPUS_LOCATIONS.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-                <option value={OTHER}>Other</option>
-              </Select>
+          {/* Right column: public and hidden descriptions */}
+          <div className="flex flex-col gap-5">
+            <Field id="d-description" label="Description" error={errors.description} helper="What anyone can see. Shown on Found Items.">
+              <Textarea id="d-description" value={form.description} maxLength={400} rows={4} invalid={!!errors.description} onChange={(e) => update('description', e.target.value)} />
             </Field>
-            <Field id="d-date" label="Date found" error={errors.date}>
-              <Input id="d-date" type="date" value={form.date} max={todayInput()} invalid={!!errors.date} onChange={(e) => update('date', e.target.value)} />
+
+            <Field
+              id="d-hiddenDetails"
+              label="Identifying details"
+              error={errors.hiddenDetails}
+              helper="Only desk staff will see this. It is used to check ownership."
+            >
+              <Textarea id="d-hiddenDetails" value={form.hiddenDetails} maxLength={300} rows={4} invalid={!!errors.hiddenDetails} placeholder="e.g. Name inside the cover, sticker on the back, contents" onChange={(e) => update('hiddenDetails', e.target.value)} />
             </Field>
           </div>
 
-          {form.location === OTHER && (
-            <Field id="d-otherLocation" label="Other location" error={errors.otherLocation}>
-              <Input id="d-otherLocation" value={form.otherLocation} maxLength={60} invalid={!!errors.otherLocation} onChange={(e) => update('otherLocation', e.target.value)} />
-            </Field>
-          )}
-
-          <Field id="d-photo" label="Photo" error={errors.photo}>
-            <PhotoInput id="d-photo" value={form.photo} invalid={!!errors.photo} onChange={(v) => update('photo', v)} />
-          </Field>
-
-          <Field
-            id="d-hiddenDetails"
-            label="Identifying details"
-            error={errors.hiddenDetails}
-            helper="Only desk staff will see this. It is used to check ownership."
-          >
-            <Textarea id="d-hiddenDetails" value={form.hiddenDetails} maxLength={300} invalid={!!errors.hiddenDetails} onChange={(e) => update('hiddenDetails', e.target.value)} />
-          </Field>
-
-          <Field id="d-handedInBy" label="Handed in by" error={errors.handedInBy} helper="Name or roll number of the person who brought it.">
-            <Input id="d-handedInBy" value={form.handedInBy} maxLength={60} invalid={!!errors.handedInBy} placeholder="e.g. 24/EE/031" onChange={(e) => update('handedInBy', e.target.value)} />
-          </Field>
-
-          <div className="flex flex-col-reverse gap-3 border-t border-divider pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col-reverse gap-3 border-t border-divider pt-5 sm:flex-row sm:items-center sm:justify-between lg:col-span-2">
             <p className="text-[13px] text-ink-2">
               Held at <span className="text-ink">{HOME_DESK}</span>
             </p>
