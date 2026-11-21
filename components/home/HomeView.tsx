@@ -28,28 +28,32 @@ import { relativeTime } from '@/lib/format';
 import { DESKS } from '@/lib/seed';
 import { useCurrentUser, useStore } from '@/lib/store';
 
-const ACTIONS: { title: string; text: string; href: string; icon: LucideIcon }[] = [
+const ACTIONS: { title: string; text: string; cta: string; href: string; icon: LucideIcon }[] = [
   {
     title: 'Report Lost Item',
-    text: 'Tell us what you lost, where and when. You will be notified if a match comes in.',
+    text: 'Tell us what, where and when. Every new find is checked against your report, and you hear the moment one fits.',
+    cta: 'Start a lost report',
     href: '/report?type=lost',
     icon: ClipboardList,
   },
   {
     title: 'Report Found Item',
-    text: 'Log an item you found so the owner can be traced, or hand it in at a desk.',
+    text: 'Found something? Log it in under a minute so its owner can be traced, or drop it at the nearest desk.',
+    cta: 'Log a found item',
     href: '/report?type=found',
     icon: PackagePlus,
   },
   {
     title: 'Find Matching Items',
-    text: 'See found items that match your open reports, ranked by match score.',
+    text: 'Your closest matches, ranked by score, with a clear breakdown of why each one fits.',
+    cta: 'See my matches',
     href: '/my-reports',
     icon: ScanSearch,
   },
   {
     title: 'Verified Handover',
-    text: 'Items are released only after the desk checks your proof of ownership and college ID.',
+    text: 'Nothing leaves the desk until your proof of ownership and college ID check out. Your item goes to you, no one else.',
+    cta: 'Track my claims',
     href: '/my-reports?tab=claims',
     icon: ShieldCheck,
   },
@@ -180,23 +184,30 @@ export function HomeView() {
           What you can do
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {ACTIONS.map((action) => (
+          {ACTIONS.map((action, i) => (
             <Link
               key={action.title}
               href={action.href}
-              className="group rounded-card border border-line bg-white p-6 shadow-card transition-colors hover:border-[#D6D3CB]"
+              className="group flex flex-col rounded-card border border-line bg-white p-6 shadow-card transition-colors hover:border-ink-icon"
             >
               <div className="flex items-start justify-between">
-                <IconTile icon={action.icon} />
+                <IconTile
+                  icon={action.icon}
+                  className="transition-colors group-hover:bg-accent group-hover:text-accent-ink"
+                />
+                <span className="font-mono text-[12px] text-ink-3">{String(i + 1).padStart(2, '0')}</span>
+              </div>
+              <h3 className="mt-5 text-[16px] font-semibold text-ink">{action.title}</h3>
+              <p className="mt-1.5 flex-1 text-[14px] leading-relaxed text-ink-2">{action.text}</p>
+              <span className="mt-5 flex items-center justify-between border-t border-divider pt-4 text-[14px] font-medium text-ink">
+                {action.cta}
                 <ArrowUpRight
                   size={18}
                   strokeWidth={1.5}
-                  className="text-ink-3 opacity-0 transition-opacity group-hover:opacity-100"
+                  className="text-ink-3 transition-colors group-hover:text-ink"
                   aria-hidden
                 />
-              </div>
-              <h3 className="mt-5 text-[16px] font-semibold text-ink">{action.title}</h3>
-              <p className="mt-1.5 text-[14px] leading-relaxed text-ink-2">{action.text}</p>
+              </span>
             </Link>
           ))}
         </div>
@@ -221,7 +232,7 @@ export function HomeView() {
             <ul className="divide-y divide-divider">
               {recent.map((item) => (
                 <li key={item.id} className="flex items-center gap-4 px-4 py-4 sm:px-5">
-                  <ItemThumb categoryId={item.categoryId} photo={item.photo} blurred />
+                  <ItemThumb categoryId={item.categoryId} photo={item.photo} />
                   <div className="min-w-0 flex-1">
                     <div className="flex items-baseline gap-2">
                       <p className="truncate text-[15px] font-medium text-ink">{item.title}</p>

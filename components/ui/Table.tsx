@@ -29,5 +29,6 @@ export function Td({ className = '', ...props }: TdHTMLAttributes<HTMLTableCellE
 }
 
 export function Tr({ className = '', ...props }: HTMLAttributes<HTMLTableRowElement>) {
-  return <tr className={`last:[&>td]:border-b-0 ${className}`} {...props} />;
+  // Drop the bottom border on the last row only, so the card edge is not doubled.
+  return <tr className={`[&:last-child>td]:border-b-0 ${className}`} {...props} />;
 }

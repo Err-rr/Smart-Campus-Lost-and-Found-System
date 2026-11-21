@@ -7,7 +7,7 @@ import { ButtonLink } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Eyebrow } from '@/components/ui/Eyebrow';
-import { BLUR_CAPTION, ItemPhoto } from '@/components/ui/ItemPhoto';
+import { ItemPhoto } from '@/components/ui/ItemPhoto';
 import { NoticeBox } from '@/components/ui/NoticeBox';
 import { StatusPill, foundItemPill } from '@/components/ui/StatusPill';
 import { canSeeHiddenDetails, effectiveFoundStatus, isActiveClaim, isCampusRole } from '@/lib/domain';
@@ -50,7 +50,6 @@ export function FoundItemDetail({ id }: { id: string }) {
 
   const status = effectiveFoundStatus(item, settings);
   const staffView = canSeeHiddenDetails(user?.role);
-  const blurred = !staffView && !!item.photo;
   const myActiveClaim = claims.find((c) => c.userId === user?.id && isActiveClaim(c.status));
   const isFinder = item.reportedBy === user?.id;
   const canClaim = status !== 'returned' && !myActiveClaim && !isFinder;
@@ -62,9 +61,8 @@ export function FoundItemDetail({ id }: { id: string }) {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <Card className="overflow-hidden">
-          <ItemPhoto categoryId={item.categoryId} photo={item.photo} blurred={blurred} className="aspect-[16/9] w-full" />
+          <ItemPhoto categoryId={item.categoryId} photo={item.photo} fit="contain" className="aspect-[16/9] w-full border-b border-divider" />
           <div className="p-5 sm:p-8">
-            {blurred && <p className="mb-3 text-[13px] text-ink-3">{BLUR_CAPTION}</p>}
             <div className="flex flex-wrap items-center gap-3">
               <span className="font-mono text-[13px] text-ink-3">{item.id}</span>
               <StatusPill kind={foundItemPill(status)} />

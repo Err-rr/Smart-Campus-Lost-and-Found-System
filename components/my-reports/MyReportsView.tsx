@@ -13,7 +13,7 @@ import { NoticeBox } from '@/components/ui/NoticeBox';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatusPill, foundItemPill, lostReportPill } from '@/components/ui/StatusPill';
 import { Tabs } from '@/components/ui/Tabs';
-import { canSeeHiddenDetails, effectiveFoundStatus } from '@/lib/domain';
+import { effectiveFoundStatus } from '@/lib/domain';
 import { formatDate, relativeTime } from '@/lib/format';
 import { useCurrentUser, useStore } from '@/lib/store';
 import { ClaimTracker } from './ClaimTracker';
@@ -51,7 +51,6 @@ export function MyReportsView({ initialTab }: { initialTab: Tab }) {
   const categoryName = useMemo(() => new Map(categories.map((c) => [c.id, c.name])), [categories]);
 
   if (!user) return null;
-  const blurPhotos = !canSeeHiddenDetails(user.role);
 
   const changeTab = (t: Tab) => {
     setTab(t);
@@ -140,7 +139,6 @@ export function MyReportsView({ initialTab }: { initialTab: Tab }) {
                                 match={m}
                                 report={report}
                                 item={item}
-                                blurPhoto={blurPhotos}
                                 onDismiss={() => dismissMatch(m.id)}
                               />
                             );

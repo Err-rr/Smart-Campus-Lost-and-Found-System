@@ -19,13 +19,13 @@ Open the site and choose a role under **Demo mode: choose a role** on the sign-i
 
 Pages outside a role are hidden from its menu and blocked if opened directly.
 
-The student account starts with a strong match waiting (LR-0001 with FI-0003) and a claim under review (CL-0002), so the flows can be shown straight away.
+The student account starts with a strong match waiting (LR-0001 with FI-0003) and a claim under review (CL-0002). The desk starts with 4 claims to verify and 2 approved items waiting for handover, so every flow can be shown straight away.
 
 ## Main features
 
 - **Report** lost or found items with a compressed photo (kept under 1 MB).
 - **Matching engine** (`lib/matching.ts`): same category is required (40 points), same location (20), found 0 to 2 days after the loss (20) or 3 to 7 days (10), and keyword overlap by Jaccard similarity (up to 20). A match is suggested at or above the threshold (default 60). Hidden identifying details are never used.
-- **Privacy**: campus users never see owner contact details or hidden identifying details, and photos of found items are blurred for them.
+- **Privacy**: campus users never see owner contact details or the hidden identifying details that the desk uses to verify a claim.
 - **Claims** with a step tracker, and notifications shown in the navbar bell (email and SMS are simulated).
 - **Desk Console**: log handed-in items, review claims side by side with the hidden details, confirm handovers after an ID check, and keep a custody register with unclaimed flags.
 - **Admin Dashboard**: overview figures and charts, user roles, categories, audit log and settings.

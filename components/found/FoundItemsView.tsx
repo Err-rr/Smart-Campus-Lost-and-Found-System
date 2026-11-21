@@ -7,14 +7,14 @@ import { Button } from '@/components/ui/Button';
 import { categoryIcon } from '@/components/ui/CategoryIcon';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Input, Select } from '@/components/ui/Form';
-import { BLUR_CAPTION, ItemPhoto } from '@/components/ui/ItemPhoto';
+import { ItemPhoto } from '@/components/ui/ItemPhoto';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { SearchField } from '@/components/ui/SearchField';
 import { StatusPill, foundItemPill } from '@/components/ui/StatusPill';
-import { canSeeHiddenDetails, effectiveFoundStatus } from '@/lib/domain';
+import { effectiveFoundStatus } from '@/lib/domain';
 import { formatDate } from '@/lib/format';
 import { CAMPUS_LOCATIONS } from '@/lib/seed';
-import { useCurrentUser, useStore } from '@/lib/store';
+import { useStore } from '@/lib/store';
 
 interface FoundItemsViewProps {
   initialQuery: string;
@@ -22,7 +22,6 @@ interface FoundItemsViewProps {
 }
 
 export function FoundItemsView({ initialQuery, initialCategory }: FoundItemsViewProps) {
-  const user = useCurrentUser();
   const foundItems = useStore((s) => s.foundItems);
   const categories = useStore((s) => s.categories);
   const settings = useStore((s) => s.settings);
@@ -33,7 +32,6 @@ export function FoundItemsView({ initialQuery, initialCategory }: FoundItemsView
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
 
-  const clearView = canSeeHiddenDetails(user?.role);
   const categoryName = useMemo(() => new Map(categories.map((c) => [c.id, c.name])), [categories]);
 
   const locations = useMemo(() => {
@@ -157,7 +155,6 @@ export function FoundItemsView({ initialQuery, initialCategory }: FoundItemsView
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {results.map((item) => {
             const status = effectiveFoundStatus(item, settings);
-            const blurred = !clearView && !!item.photo;
             return (
               <li key={item.id}>
                 <Link
@@ -165,11 +162,10 @@ export function FoundItemsView({ initialQuery, initialCategory }: FoundItemsView
                   className="flex h-full flex-col overflow-hidden rounded-card border border-line bg-white shadow-card transition-colors hover:border-[#D6D3CB]"
                 >
                   <div className="relative">
-                    <ItemPhoto categoryId={item.categoryId} photo={item.photo} blurred={blurred} className="aspect-[16/10] w-full" />
+                    <ItemPhoto categoryId={item.categoryId} photo={item.photo} className="aspect-[16/10] w-full" />
                     <StatusPill kind={foundItemPill(status)} className="absolute left-3 top-3" />
                   </div>
                   <div className="flex flex-1 flex-col p-5">
-                    {blurred && <p className="mb-2 text-[12px] text-ink-3">{BLUR_CAPTION}</p>}
                     <div className="flex items-baseline justify-between gap-3">
                       <p className="text-[16px] font-semibold text-ink">{item.title}</p>
                       <span className="shrink-0 font-mono text-[12px] text-ink-3">{item.id}</span>

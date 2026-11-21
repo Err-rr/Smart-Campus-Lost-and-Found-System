@@ -3,25 +3,27 @@ import { categoryIcon } from './CategoryIcon';
 interface ItemPhotoProps {
   categoryId: string;
   photo?: string;
-  blurred?: boolean;
+  /** "cover" fills the frame (cards). "contain" shows the whole photo (detail page). */
+  fit?: 'cover' | 'contain';
   className?: string;
 }
 
-/**
- * Large photo area for cards and detail pages. Campus users see uploaded
- * photos blurred so ownership checks stay meaningful.
- */
-export function ItemPhoto({ categoryId, photo, blurred = false, className = '' }: ItemPhotoProps) {
+/** Large photo area for cards and detail pages. Falls back to the category icon. */
+export function ItemPhoto({ categoryId, photo, fit = 'cover', className = '' }: ItemPhotoProps) {
   const Icon = categoryIcon(categoryId);
   return (
-    <div className={`relative flex items-center justify-center overflow-hidden bg-tile text-ink-icon ${className}`}>
+    <div
+      className={`relative flex items-center justify-center overflow-hidden text-ink-icon ${
+        photo && fit === 'contain' ? 'bg-white' : 'bg-tile'
+      } ${className}`}
+    >
       {photo ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={photo}
           alt=""
           loading="lazy"
-          className={`h-full w-full object-cover ${blurred ? 'scale-110 [filter:blur(10px)]' : ''}`}
+          className={`h-full w-full ${fit === 'contain' ? 'object-contain' : 'object-cover'}`}
         />
       ) : (
         <Icon size={40} strokeWidth={1.5} aria-hidden />
@@ -29,5 +31,3 @@ export function ItemPhoto({ categoryId, photo, blurred = false, className = '' }
     </div>
   );
 }
-
-export const BLUR_CAPTION = 'Photo blurred to protect ownership checks';
