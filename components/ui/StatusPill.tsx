@@ -1,6 +1,14 @@
-import type { FoundItemStatus, LostReportStatus } from '@/lib/types';
+import type { ClaimStatus, FoundItemStatus, LostReportStatus } from '@/lib/types';
 
-export type PillKind = 'lost' | 'in_custody' | 'matched' | 'claim_pending' | 'returned' | 'closed' | 'unclaimed';
+export type PillKind =
+  | 'lost'
+  | 'in_custody'
+  | 'matched'
+  | 'claim_pending'
+  | 'returned'
+  | 'closed'
+  | 'unclaimed'
+  | ClaimStatus;
 
 const PILLS: Record<PillKind, { label: string; fg: string; bg: string }> = {
   lost: { label: 'Lost', fg: '#A94438', bg: '#F7E8E5' },
@@ -10,6 +18,11 @@ const PILLS: Record<PillKind, { label: string; fg: string; bg: string }> = {
   returned: { label: 'Returned', fg: '#52525B', bg: '#EEEEEC' },
   closed: { label: 'Closed', fg: '#52525B', bg: '#EEEEEC' },
   unclaimed: { label: 'Unclaimed', fg: '#7A4A1E', bg: '#F5EBE0' },
+  // Claim statuses reuse the same muted palette.
+  submitted: { label: 'Submitted', fg: '#3F5F8A', bg: '#E6EDF6' },
+  approved: { label: 'Approved', fg: '#3B7A4B', bg: '#E5F0E7' },
+  rejected: { label: 'Rejected', fg: '#A94438', bg: '#F7E8E5' },
+  handed_over: { label: 'Handed over', fg: '#52525B', bg: '#EEEEEC' },
 };
 
 export function lostReportPill(status: LostReportStatus): PillKind {

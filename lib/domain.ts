@@ -46,6 +46,17 @@ export function effectiveFoundStatus(
   return item.status;
 }
 
+export const ACTIVE_CLAIM_STATUSES = ['submitted', 'approved'] as const;
+
+export function isActiveClaim(status: string): boolean {
+  return (ACTIVE_CLAIM_STATUSES as readonly string[]).includes(status);
+}
+
+/** Desk staff and admin can see clear photos and identifying details. */
+export function canSeeHiddenDetails(role: Role | undefined): boolean {
+  return role === 'desk' || role === 'admin';
+}
+
 export interface UserActivity {
   openReports: number;
   possibleMatches: number;
@@ -57,7 +68,7 @@ export function userActivity(
   userId: string,
 ): UserActivity {
   const myReports = data.lostReports.filter((r) => r.userId === userId);
-  const openIds = new Set(myReports.filter((r) => r.status === 'open').map((r) => r.id));
+  const openIds = new Set(myReports.filter((r) => r.status !== 'closed').map((r) => r.id));
 
   return {
     openReports: myReports.filter((r) => r.status !== 'closed').length,
