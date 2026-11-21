@@ -53,7 +53,8 @@ export function MatchCard({ match, report, item, blurPhoto, onDismiss }: MatchCa
   const confirmed = match.status === 'confirmed';
 
   return (
-    <div className="rounded-[14px] border border-line bg-white p-4 sm:p-5">
+    <div className="grid grid-cols-1 gap-4 rounded-[14px] border border-line bg-white p-4 sm:p-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-6">
+      <div className="flex flex-col">
       <div className="flex gap-4">
         <ItemPhoto
           categoryId={item.categoryId}
@@ -87,25 +88,7 @@ export function MatchCard({ match, report, item, blurPhoto, onDismiss }: MatchCa
         <ScoreBar value={match.matchScore} label="Match score" />
       </div>
 
-      <div className="mt-4 rounded-[12px] bg-[#FAFAF8] p-4">
-        <Eyebrow>Why this match</Eyebrow>
-        <dl className="mt-3 flex flex-col gap-2.5">
-          {FACTOR_ORDER.map((factor) => (
-            <div key={factor} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1">
-              <dt className="min-w-0">
-                <span className="text-[14px] text-ink">{FACTOR_LABEL[factor]}</span>
-                <span className="block text-[12px] text-ink-3">{factorNote(factor, report, item)}</span>
-              </dt>
-              <dd className="font-mono text-[13px] tabular-nums text-ink">
-                {match.breakdown[factor]}
-                <span className="text-ink-3"> / {FACTOR_MAX[factor]}</span>
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center gap-2">
+      <div className="mt-4 flex flex-wrap items-center gap-2 lg:mt-auto lg:pt-4">
         <ButtonLink href={`/found/${item.id}`} variant="secondary">
           View item
         </ButtonLink>
@@ -121,6 +104,25 @@ export function MatchCard({ match, report, item, blurPhoto, onDismiss }: MatchCa
             </Button>
           )
         )}
+      </div>
+      </div>
+
+      <div className="rounded-[12px] bg-[#FAFAF8] p-4">
+        <Eyebrow>Why this match</Eyebrow>
+        <dl className="mt-3 flex flex-col gap-2.5">
+          {FACTOR_ORDER.map((factor) => (
+            <div key={factor} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-4 gap-y-1">
+              <dt className="min-w-0">
+                <span className="text-[14px] text-ink">{FACTOR_LABEL[factor]}</span>
+                <span className="block text-[12px] text-ink-3">{factorNote(factor, report, item)}</span>
+              </dt>
+              <dd className="font-mono text-[13px] tabular-nums text-ink">
+                {match.breakdown[factor]}
+                <span className="text-ink-3"> / {FACTOR_MAX[factor]}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </div>
   );

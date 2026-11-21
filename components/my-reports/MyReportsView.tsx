@@ -130,7 +130,7 @@ export function MyReportsView({ initialTab }: { initialTab: Tab }) {
                           No matches yet. You will get an email and SMS when one comes in.
                         </p>
                       ) : (
-                        <div className="mt-3 grid grid-cols-1 gap-4 xl:grid-cols-2">
+                        <div className="mt-3 flex flex-col gap-4">
                           {reportMatches.map((m) => {
                             const item = itemById.get(m.foundItemId);
                             if (!item) return null;

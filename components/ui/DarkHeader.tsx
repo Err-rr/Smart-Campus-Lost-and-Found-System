@@ -18,9 +18,9 @@ export function DarkHeader({ eyebrow, title, description, stats }: DarkHeaderPro
       </div>
       <dl className="grid grid-cols-3 divide-x divide-panel-line rounded-card bg-panel-inner py-5">
         {stats.map((s) => (
-          <div key={s.label} className="px-4 sm:px-6">
-            <dd className="font-mono text-[28px] font-medium leading-none tabular-nums">{s.value}</dd>
+          <div key={s.label} className="flex flex-col-reverse justify-end px-4 sm:px-6">
             <dt className="mt-2 text-[13px] leading-snug text-panel-muted">{s.label}</dt>
+            <dd className="font-mono text-[28px] font-medium leading-none tabular-nums">{s.value}</dd>
           </div>
         ))}
       </dl>

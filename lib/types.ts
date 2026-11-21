@@ -90,9 +90,10 @@ export interface AuditLog {
   id: string;
   actorId: string;
   action: string;
-  entity: 'LostReport' | 'FoundItem' | 'Match' | 'Claim' | 'User' | 'Settings';
+  entity: 'LostReport' | 'FoundItem' | 'Match' | 'Claim' | 'User' | 'Category' | 'Settings';
   entityId: string;
   timestamp: string; // ISO
+  details?: string; // extra context, e.g. the new role
 }
 
 export interface Settings {

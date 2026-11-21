@@ -91,8 +91,9 @@ function makeLog(
   action: string,
   entity: AuditLog['entity'],
   entityId: string,
+  details?: string,
 ): AuditLog {
-  return { id: nextId('A', existing), actorId, action, entity, entityId, timestamp: nowIso() };
+  return { id: nextId('A', existing), actorId, action, entity, entityId, timestamp: nowIso(), details };
 }
 
 /**
@@ -298,7 +299,7 @@ export const useStore = create<StoreState>()(
           foundItems: state.foundItems.map((f) =>
             f.id === claim.foundItemId && f.status === 'claim_pending' && !otherActive ? { ...f, status: 'in_custody' } : f,
           ),
-          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Rejected claim', 'Claim', claimId)],
+          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Rejected claim', 'Claim', claimId, reason)],
           notifications: [
             ...state.notifications,
             makeNotification(state.notifications, claim.userId, `Claim ${claimId} rejected. Reason: ${reason}`),
@@ -330,9 +331,10 @@ export const useStore = create<StoreState>()(
             makeLog(
               state.auditLogs,
               deskUserId,
-              `Recorded handover to ${collectorRollNo}, college ID checked`,
+              'Recorded handover',
               'Claim',
               claimId,
+              `Collected by ${collectorRollNo}. College ID checked.`,
             ),
           ],
           notifications: [
@@ -367,7 +369,7 @@ export const useStore = create<StoreState>()(
           users: state.users.map((u) => (u.id === userId ? { ...u, role } : u)),
           auditLogs: [
             ...state.auditLogs,
-            makeLog(state.auditLogs, state.currentUserId!, `Changed role to ${ROLE_LABEL[role]}`, 'User', userId),
+            makeLog(state.auditLogs, state.currentUserId!, 'Changed role', 'User', userId, `${user.name}: ${ROLE_LABEL[user.role]} to ${ROLE_LABEL[role]}`),
           ],
         });
       },
@@ -377,7 +379,7 @@ export const useStore = create<StoreState>()(
         const id = `cat-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${Date.now().toString(36)}`;
         set({
           categories: [...state.categories, { id, name }],
-          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, `Added category ${name}`, 'Settings', id)],
+          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Added category', 'Category', id, name)],
         });
       },
 
@@ -387,7 +389,7 @@ export const useStore = create<StoreState>()(
           categories: state.categories.map((c) => (c.id === categoryId ? { ...c, name } : c)),
           auditLogs: [
             ...state.auditLogs,
-            makeLog(state.auditLogs, state.currentUserId!, `Renamed category to ${name}`, 'Settings', categoryId),
+            makeLog(state.auditLogs, state.currentUserId!, 'Renamed category', 'Category', categoryId, `${state.categories.find((c) => c.id === categoryId)?.name} to ${name}`),
           ],
         });
       },
@@ -400,7 +402,7 @@ export const useStore = create<StoreState>()(
         if (inUse) return;
         set({
           categories: state.categories.filter((c) => c.id !== categoryId),
-          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Deleted category', 'Settings', categoryId)],
+          auditLogs: [...state.auditLogs, makeLog(state.auditLogs, state.currentUserId!, 'Deleted category', 'Category', categoryId)],
         });
       },
 
@@ -414,9 +416,10 @@ export const useStore = create<StoreState>()(
             makeLog(
               state.auditLogs,
               state.currentUserId!,
-              `Updated settings: threshold ${settings.matchThreshold}, unclaimed after ${settings.unclaimedDays} days`,
+              'Updated settings',
               'Settings',
               'settings',
+              `Match threshold ${settings.matchThreshold}, unclaimed after ${settings.unclaimedDays} days`,
             ),
           ],
         });

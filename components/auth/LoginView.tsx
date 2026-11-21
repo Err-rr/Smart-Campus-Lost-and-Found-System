@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/Card';
 import { DtuLogo } from '@/components/ui/DtuLogo';
 import { Eyebrow } from '@/components/ui/Eyebrow';
 import { IconTile } from '@/components/ui/IconTile';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { ROLE_LABEL } from '@/lib/domain';
 import { useHasHydrated, useStore } from '@/lib/store';
 import type { Role } from '@/lib/types';
@@ -76,14 +77,16 @@ export function LoginView() {
                       <IconTile icon={icon} />
                       <span className="min-w-0 flex-1">
                         <span className="block text-[15px] font-medium text-ink">{ROLE_LABEL[role]}</span>
-                        <span className="block truncate text-[13px] text-ink-2">
+                        <span className="block min-h-[20px] truncate text-[13px] text-ink-2">
                           {user ? (
                             <>
                               {user.name}
                               {user.rollNo && <span className="ml-1.5 font-mono text-[12px] text-ink-3">{user.rollNo}</span>}
                             </>
-                          ) : (
+                          ) : hydrated ? (
                             note
+                          ) : (
+                            <Skeleton className="mt-1 h-3 w-32" />
                           )}
                         </span>
                       </span>
