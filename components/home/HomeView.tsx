@@ -107,7 +107,7 @@ export function HomeView() {
   return (
     <div className="flex flex-col gap-10">
       {/* Hero */}
-      <section className="grid gap-8 rounded-panel bg-panel p-6 text-white sm:p-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center lg:gap-12">
+      <section className="grid grid-cols-1 gap-8 rounded-panel bg-panel p-6 text-white sm:p-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-center lg:gap-12">
         <div>
           <Eyebrow tone="dark">Campus lost and found</Eyebrow>
           <h1 className="mt-4 text-[32px] font-semibold leading-tight tracking-[-0.02em] sm:text-title">
@@ -203,7 +203,7 @@ export function HomeView() {
       </section>
 
       {/* Recently found + notice */}
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <section aria-labelledby="recent-title">
           <div className="mb-4 flex items-baseline justify-between">
             <h2 id="recent-title" className="text-section text-ink">
