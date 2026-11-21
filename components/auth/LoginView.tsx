@@ -40,7 +40,15 @@ export function LoginView() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative isolate flex min-h-screen flex-col overflow-hidden">
+      {/* Campus photo behind the sign-in card. If public/login-bg.jpg is missing, the plain page colour shows. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div
+          className="absolute -inset-6 bg-cover bg-center [filter:blur(6px)]"
+          style={{ backgroundImage: "url('/login-bg.jpg')" }}
+        />
+        <div className="absolute inset-0 bg-page/60" />
+      </div>
       <main className="flex flex-1 items-center justify-center px-4 py-12">
         <Card className="w-full max-w-[440px] p-6 sm:p-8 md:max-w-[680px]">
           <div className="flex flex-col items-center text-center">
@@ -99,7 +107,10 @@ export function LoginView() {
           </div>
         </Card>
       </main>
-      <Footer />
+      {/* Solid strip so the footer text stays readable over the photo. */}
+      <div className="bg-page">
+        <Footer />
+      </div>
     </div>
   );
 }
