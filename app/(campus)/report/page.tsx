@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { PlaceholderPage } from '@/components/layout/PlaceholderPage';
+import { ReportView } from '@/components/report/ReportView';
 
 export const metadata: Metadata = { title: 'Report' };
 
-export default function Page() {
-  return <PlaceholderPage title="Report" description="Report an item you lost or found on campus." />;
+export default function ReportPage({ searchParams }: { searchParams: { type?: string } }) {
+  return <ReportView initialType={searchParams.type === 'found' ? 'found' : 'lost'} />;
 }
