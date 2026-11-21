@@ -227,11 +227,13 @@ export function HomeView() {
                       <p className="truncate text-[15px] font-medium text-ink">{item.title}</p>
                       <span className="hidden shrink-0 font-mono text-[12px] text-ink-3 sm:inline">{item.id}</span>
                     </div>
-                    <p className="mt-0.5 flex items-center gap-1.5 text-[14px] text-ink-2">
-                      <MapPin size={14} strokeWidth={1.5} className="shrink-0" aria-hidden />
-                      <span className="truncate">{item.locationFound}</span>
-                      <span aria-hidden>·</span>
-                      <span className="shrink-0">{relativeTime(item.dateFound)}</span>
+                    <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-[14px] text-ink-2">
+                      <span className="flex items-center gap-1.5">
+                        <MapPin size={14} strokeWidth={1.5} className="shrink-0" aria-hidden />
+                        {item.locationFound}
+                      </span>
+                      <span aria-hidden className="hidden sm:inline">·</span>
+                      <span className="whitespace-nowrap">{relativeTime(item.dateFound)}</span>
                     </p>
                   </div>
                   <StatusPill kind={foundItemPill(effectiveFoundStatus(item, settings))} />
