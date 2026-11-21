@@ -24,6 +24,7 @@ export const CAMPUS_LOCATIONS = [
 ] as const;
 
 export const DESKS = [
+  'Central Lost and Found Desk',
   'Central Library Desk',
   'Admin Block Help Desk',
   'Sports Complex Office',
